@@ -62,19 +62,19 @@ El usuario puede:
   - Adjuntando evidencia
 👉 Esto detiene inmediatamente los recordatorios.
 
-### ❌ 5. Tarea incompleta
+### ❌ 7. Tarea incompleta
 - Si se alcanza la fecha límite sin completar la tarea:
   - Se marca automáticamente como incompleta
   - Se guarda en el historial
  
-### 📊 6. Historial
+### 📊 8. Historial
 - Accede al historial desde el menú.
 - Podrás ver:
   - Tareas completadas
   - Tareas no completadas
   - Evidencias asociadas
  
-### ⚙️ 7. Configuración
+### ⚙️ 9. Configuración
 - Ajusta:
   - Frecuencia de recordatorios
   - Sonido y vibración
