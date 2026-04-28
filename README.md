@@ -21,6 +21,65 @@ La aplicación hace uso de funcionalidades propias de dispositivos móviles, tal
 - 📷 Uso de la cámara para validar cumplimiento de tareas mediante evidencia
 - 📱 Uso continuo del dispositivo: aprovechamiento del hábito de uso del smartphone
 
+## 📖 Intrucciones de uso.
+
+### 🟢 1. Crear una tarea
+- Presiona el botón flotante (ícono ✏️).
+- Ingresa:
+  - Título de la tarea
+  - Descripción
+  - Fecha y hora límite
+  - Tiempo de anticipación (inicio de recordatorios)
+- Guarda la tarea.
+
+### ⏰ 2. Activación de recordatorios
+- Cuando se alcanza el tiempo de anticipación, la aplicación comienza a enviar recordatorios.
+- Estos pueden ser:
+  - 🔔 Notificaciones (si no estás usando el dispositivo)
+  - 🖥️ Alertas intrusivas en pantalla completa (si estás usando el dispositivo)
+ 
+### 🔁 3. Frecuencia de recordatorios
+- Puedes configurar cada cuánto tiempo deseas recibir recordatorios:
+  - Intervalos fijos (ej: 10 min, 5 min, 1 min)
+  - Modo dinámico (cada vez más frecuente a medida que se acerca el límite)
+ 
+### 🧠 4. Modo “Realizando tarea”
+- Desde la notificación intrusiva, el usuario puede seleccionar “Realizando tarea”.
+- Esto activa un modo de concentración donde:
+  - Se detienen temporalmente los recordatorios constantes
+  - Se asume que el usuario está trabajando en la tarea
+
+### ⏳ 5. Verificación de progreso
+- Después de un tiempo determinado (ej: 25 minutos), la aplicación mostrará una nueva ventana:
+  - “¿Sigues realizando la tarea?”
+El usuario puede:
+- ✔ Confirmar → se mantiene el modo concentración
+- ❌ Cerrar o no responder → se reactivan los recordatorios insistentes
+ 
+### 📷 6. Finalización de tarea
+- El usuario puede completar la tarea en cualquier momento:
+  - Marcándola como realizada
+  - Adjuntando evidencia
+👉 Esto detiene inmediatamente los recordatorios.
+
+### ❌ 5. Tarea incompleta
+- Si se alcanza la fecha límite sin completar la tarea:
+  - Se marca automáticamente como incompleta
+  - Se guarda en el historial
+ 
+### 📊 6. Historial
+- Accede al historial desde el menú.
+- Podrás ver:
+  - Tareas completadas
+  - Tareas no completadas
+  - Evidencias asociadas
+ 
+### ⚙️ 7. Configuración
+- Ajusta:
+  - Frecuencia de recordatorios
+  - Sonido y vibración
+  - Preferencias de notificación
+
 ## 👤 Historias de usuario.
 
 - Como usuario, quiero crear tareas con fecha límite para organizarme.
