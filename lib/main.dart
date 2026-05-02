@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:reminder_noescape/ui/screens/home_screen.dart';
-import 'package:reminder_noescape/ui/screens/create_task_screen.dart';
-import 'package:reminder_noescape/ui/screens/history_screen.dart';
 import 'package:reminder_noescape/ui/screens/settings_screen.dart';
 import 'package:reminder_noescape/ui/screens/about_screen.dart';
+import 'package:reminder_noescape/models/task_model.dart';
+import 'package:reminder_noescape/ui/screens/task_detail_screen.dart';
 
 void main() 
 {
@@ -20,14 +20,27 @@ class MyApp extends StatelessWidget
     return MaterialApp
     (
       initialRoute: "/",
-      //rutas de las pantallas
+
+      //rutas de pantallas normales
       routes: 
       {
         '/': (context) => const HomeScreen(),
-        '/createTask': (context) => const CreateTaskScreen(),
-        '/history': (context) => const HistoryScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/about': (context) => const AboutScreen(),
+      },
+
+      //rutas de pantallas dinamicas
+      onGenerateRoute: (settings)
+      {
+        if (settings.name == '/taskDetail')
+        {
+          final task = settings.arguments as Task;
+          return MaterialPageRoute
+          (
+            builder: (context) => TaskDetailScreen(task: task),
+          );
+        }
+        return null;
       },
 
       title: 'Reminder No Escape',

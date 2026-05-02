@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'pending_tasks_screen.dart';
 import 'history_screen.dart';
+import 'pending_tasks_screen.dart';
 
-class HomeScreen extends StatelessWidget 
+class HomeScreen extends StatelessWidget
 {
-  const HomeScreen({super.key});
+  const HomeScreen ({super.key});
 
   @override
-  Widget build(BuildContext context) 
+  Widget build(BuildContext context)
   {
     return DefaultTabController
     (
@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         appBar: AppBar
         (
-          title: const Text("Reminder: No Escape"),
+          title: const Text('Reminder: No Escape'),
           actions: 
           [
             //menu de navegacion
@@ -105,7 +105,6 @@ class HomeScreen extends StatelessWidget
             ],
           ),
         ),
-
         body: const TabBarView
         (
           children: 
