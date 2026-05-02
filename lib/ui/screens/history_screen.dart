@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 
-class HistoryScreen extends StatelessWidget
+class HistoryScreen extends StatelessWidget 
 {
   const HistoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context)
+  Widget build(BuildContext context) 
   {
-    return Scaffold
+    return const Center
     (
-      appBar: AppBar(title: const Text("Historial")),
-      body: const Center
+      child: Text
       (
-        child: Text("Pantalla de historial (desarrollo)"),
+        "Historial de tareas",
+        style: TextStyle(fontSize: 18),
       ),
     );
-
   }
 }

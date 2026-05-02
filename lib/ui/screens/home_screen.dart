@@ -1,112 +1,119 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_noescape/ui/widgets/expandable_fab.dart';
+import 'pending_tasks_screen.dart';
+import 'history_screen.dart';
 
-class HomeScreen extends StatelessWidget
+class HomeScreen extends StatelessWidget 
 {
-  const HomeScreen ({super.key});
+  const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context)
+  Widget build(BuildContext context) 
   {
-    return Scaffold
+    return DefaultTabController
     (
-      backgroundColor: Theme.of(context).colorScheme.tertiary,
-      appBar: AppBar(title: const Text("Reminder: No Escape"),),
-      body: Center
+      length: 2,
+      child: Scaffold
       (
-        child: Padding
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        appBar: AppBar
         (
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column
-          (
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: 
-            [
-              //imagen central
-              Image.asset
-              (
-                "assets/images/empty.png",
-                height: 150,
-              ),
+          title: const Text("Reminder: No Escape"),
+          actions: 
+          [
+            //menu de navegacion
+            PopupMenuButton<String>
+            (
+              onSelected: (value)
+              {
+                switch (value)
+                {
+                  case 'settings':
+                    Navigator.pushNamed(context, '/settings');
+                    break;
+                  case 'about':
+                    Navigator.pushNamed(context, '/about');
+                    break;
+                }
+              },
 
-              const SizedBox(height: 30,),
-
-              //texto principal
-              const Text
-              (
-                "Organiza ahora, cumple a tiempo",
-                textAlign: TextAlign.center,
-                style: TextStyle
+              itemBuilder: (context) => 
+              [
+                //navegar a configuracion
+                const PopupMenuItem
                 (
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 0, 0, 0),
+                  value: 'settings',
+                  child: Row
+                  (
+                    children: 
+                    [
+                      Icon(Icons.settings),
+                      SizedBox(width: 12),
+                      Text("Configuración"),
+                    ],
+                  ),
+                ),
+
+                //navegar al about
+                const PopupMenuItem
+                (
+                  value: 'about',
+                  child: Row
+                  (
+                    children: 
+                    [
+                      Icon(Icons.info_outline),
+                      SizedBox(width: 12),
+                      Text("Acerca de"),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+
+          bottom: const TabBar
+          (
+            tabs: 
+            [
+              Tab
+              (
+                child: Row
+                (
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: 
+                  [
+                    Icon(Icons.task), 
+                    SizedBox(width: 8), 
+                    Text("Pendientes"),
+                  ],
                 ),
               ),
-
-              const SizedBox(height: 15),
-
-              //texto secundario
-              const Text
+              
+              Tab
               (
-                "Añade tus tareas y recibe recordatorios constantes para asegurarte de completarlas antes del límite.",
-                textAlign: TextAlign.center,
-                style: TextStyle
+                child: Row
                 (
-                  fontSize: 16,
-                  color: Color.fromARGB(179, 0, 0, 0),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: 
+                  [
+                    Icon(Icons.history), 
+                    SizedBox(width: 8), 
+                    Text("Historial"),
+                  ],
                 ),
               ),
             ],
           ),
         ),
-      ),
 
-      floatingActionButton: ExpandableFab
-      (
-        distance: 110, 
-        children: 
-        [
-          FloatingActionButton
-          (
-            heroTag: "create",
-            mini: true,
-            tooltip: "crear tareas",
-            onPressed: ()
-            {Navigator.pushNamed(context, '/createTask');},
-            child: const Icon(Icons.edit),
-          ),
-
-          FloatingActionButton
-          (
-            heroTag: "history",
-            mini: true,
-            tooltip: "Historial",
-            onPressed: ()
-            {Navigator.pushNamed(context, '/history');},
-            child: const Icon(Icons.history),
-          ),
-
-          FloatingActionButton
-          (
-            heroTag: "settings",
-            mini: true,
-            tooltip: "Configuracion",
-            onPressed: ()
-            {Navigator.pushNamed(context, '/settings');},
-            child: const Icon(Icons.settings),
-          ),
-
-          FloatingActionButton
-          (
-            heroTag: "about",
-            mini: true,
-            tooltip: "Acerca de",
-            onPressed: ()
-            {Navigator.pushNamed(context, '/about');},
-            child: const Icon(Icons.info),
-          ),
-        ],
+        body: const TabBarView
+        (
+          children: 
+          [
+            PendingTasksScreen(),
+            HistoryScreen(),
+          ],
+        ),
       ),
     );
   }
