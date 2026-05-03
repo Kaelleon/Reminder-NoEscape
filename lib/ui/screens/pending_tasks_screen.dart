@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reminder_noescape/models/task_model.dart';
 import 'package:reminder_noescape/ui/widgets/add_task_sheet.dart';
+import 'package:reminder_noescape/ui/widgets/empty_state.dart';
 import 'package:reminder_noescape/ui/widgets/task_card.dart';
 
 class PendingTasksScreen extends StatefulWidget
@@ -55,7 +56,15 @@ class _PendingTaskScreenState extends State<PendingTasksScreen>
     return Scaffold
     (
       backgroundColor: Colors.transparent,
-      body: _tasks.isEmpty ? _buildEmptyState() : ListView.builder
+      body: _tasks.isEmpty 
+      ? const EmptyState
+        (
+          imagePath: "assets/images/empty.png", 
+          title: "Organiza ahora, cumple a tiempo", 
+          subtitle: "Añade tus tareas y recibe recordatorios constantes para asegurarte de completarlas antes del límite."
+        ) 
+        
+      : ListView.builder
       (
         padding: const EdgeInsets.only
         (
@@ -78,52 +87,6 @@ class _PendingTaskScreenState extends State<PendingTasksScreen>
         onPressed: _openAddTaskSheet,
         tooltip: "Agregar recordatorio",
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState()
-  {
-    return Center
-    (
-      child: Padding
-      (
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column
-        (
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: 
-          [
-            //imagen central
-            Image.asset("assets/images/empty.png", height: 150),
-            const SizedBox(height: 30),
-            //texto principal
-            const Text
-            (
-              "Organiza ahora, cumple a tiempo",
-              textAlign: TextAlign.center,
-              style: TextStyle
-              (
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
-            const SizedBox(height: 15),
-
-            //texto secundario
-            const Text
-            (
-              "Añade tus tareas y recibe recordatorios constantes para asegurarte de completarlas antes del límite.",
-              textAlign: TextAlign.center,
-              style: TextStyle
-              (
-                fontSize: 16,
-                color: Color.fromARGB(179, 0, 0, 0),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

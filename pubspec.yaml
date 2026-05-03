@@ -59,6 +59,7 @@ flutter:
 
   assets:
   - assets/images/empty.png
+  - assets/images/empty_history.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reminder_noescape/models/task_model.dart';
+import 'package:reminder_noescape/ui/widgets/empty_state.dart';
 import 'package:reminder_noescape/ui/widgets/task_card.dart';
 
 class HistoryScreen extends StatelessWidget
@@ -52,15 +53,26 @@ class HistoryScreen extends StatelessWidget
   @override
   Widget build(BuildContext context)
   {
-    return ListView.builder
+    return Scaffold
     (
-      itemCount: _mockTasks.length,
-      padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 90),
-      itemBuilder: (context, index) => TaskCard
+      backgroundColor: Colors.transparent,
+      body: _mockTasks.isEmpty ? const EmptyState
       (
-        task: _mockTasks[index], 
-        onTap: () => Navigator.pushNamed(context, '/taskDetail', arguments: _mockTasks[index],),
-        showStatus: true,
+        imagePath: "assets/images/empty_history.png",
+        title: "Sin historial aún",
+        subtitle: "Las tareas completadas o vencidas aparecerán aquí",
+      )
+
+      :ListView.builder
+      (
+        itemCount: _mockTasks.length,
+        padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 90),
+        itemBuilder: (context, index) => TaskCard
+        (
+          task: _mockTasks[index], 
+          onTap: () => Navigator.pushNamed(context, '/taskDetail', arguments: _mockTasks[index],),
+          showStatus: true,
+        ),
       ),
     );
   }
