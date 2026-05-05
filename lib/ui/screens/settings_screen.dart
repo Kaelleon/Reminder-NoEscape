@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reminder_noescape/ui/widgets/app_row.dart';
 import 'package:reminder_noescape/ui/widgets/section_title.dart';
 import 'package:reminder_noescape/ui/widgets/section_card.dart';
 
@@ -45,7 +46,7 @@ class SettingsScreen extends StatelessWidget
               (
                 children:
                 [
-                  _SettingsRow
+                  AppRow
                   (
                     icon: Icons.palette_outlined,
                     iconColor: const Color(0xFF5C6BC0),
@@ -58,7 +59,7 @@ class SettingsScreen extends StatelessWidget
                   ),
                   Divider(height: 1, color: Colors.grey.shade200),
 
-                  _SettingsRow
+                  AppRow
                   (
                     icon: Icons.language_outlined,
                     iconColor: const Color(0xFF26A69A),
@@ -84,7 +85,7 @@ class SettingsScreen extends StatelessWidget
               (
                 children:
                 [
-                  _SettingsRow
+                  AppRow
                   (
                     icon: Icons.volume_up_outlined,
                     iconColor: const Color(0xFFFFA726),
@@ -97,7 +98,7 @@ class SettingsScreen extends StatelessWidget
                   ),
                   Divider(height: 1, color: Colors.grey.shade200),
 
-                  _SettingsRow
+                  AppRow
                   (
                     icon: Icons.vibration_rounded,
                     iconColor: const Color(0xFF546E7A),
@@ -105,13 +106,14 @@ class SettingsScreen extends StatelessWidget
                     trailing: Switch
                     (
                       value: true,
-                      onChanged: null,
+                      onChanged: (_) {},
                       activeColor: colors.primary,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
                   Divider(height: 1, color: Colors.grey.shade200),
 
-                  _SettingsRow
+                  AppRow
                   (
                     icon: Icons.flashlight_on_outlined,
                     iconColor: const Color(0xFF26A69A),
@@ -121,6 +123,7 @@ class SettingsScreen extends StatelessWidget
                       value: false,
                       onChanged: null,
                       activeColor: colors.primary,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
                 ],
@@ -286,7 +289,7 @@ class SettingsScreen extends StatelessWidget
               (
                 children:
                 [
-                  _SettingsRow
+                  AppRow
                   (
                     icon: Icons.bug_report_outlined,
                     iconColor: colors.primary,
@@ -295,7 +298,7 @@ class SettingsScreen extends StatelessWidget
                   ),
                   Divider(height: 1, color: Colors.grey.shade200),
 
-                  _SettingsRow
+                  AppRow
                   (
                     icon: Icons.star_outline_rounded,
                     iconColor: const Color(0xFFFFA726),
@@ -304,7 +307,7 @@ class SettingsScreen extends StatelessWidget
                   ),
                   Divider(height: 1, color: Colors.grey.shade200),
 
-                  _SettingsRow
+                  AppRow
                   (
                     icon: Icons.privacy_tip_outlined,
                     iconColor: const Color(0xFF546E7A),
@@ -317,49 +320,6 @@ class SettingsScreen extends StatelessWidget
             const SizedBox(height: 24),
           ],
         ),
-      ),
-    );
-  }
-}
-
-//estructura fila de ajustes
-class _SettingsRow extends StatelessWidget
-{
-  final IconData icon;
-  final Color iconColor;
-  final String label;
-  final Widget trailing;
-
-  const _SettingsRow
-  ({
-    required this.icon,
-    required this.iconColor,
-    required this.label,
-    required this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context)
-  {
-    return Padding
-    (
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Row
-      (
-        children:
-        [
-          Icon(icon, color: iconColor, size: 22),
-          const SizedBox(width: 12),
-          Expanded
-          (
-            child: Text
-            (
-              label,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-            ),
-          ),
-          trailing,
-        ],
       ),
     );
   }
