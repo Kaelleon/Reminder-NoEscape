@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:reminder_noescape/ui/widgets/section_title.dart';
+import 'package:reminder_noescape/ui/widgets/section_card.dart';
 
 class AboutScreen extends StatelessWidget 
 {
@@ -75,7 +77,7 @@ class AboutScreen extends StatelessWidget
             const SizedBox(height: 32),
 
             //descripcion
-            _SectionCard
+            SectionCard
             (
               child: const Text
               (
@@ -89,7 +91,7 @@ class AboutScreen extends StatelessWidget
             const SizedBox(height: 20),
 
             //funcionamiento
-            _SectionTitle(label: 'Cómo funciona', colors: colors),
+            SectionTitle(label: 'Cómo funciona', color: colors.primary),
             const SizedBox(height: 12),
 
             //alertas de pantalla
@@ -128,9 +130,9 @@ class AboutScreen extends StatelessWidget
             const SizedBox(height: 20),
 
             //anticipacion
-            _SectionTitle(label: 'Anticipación', colors: colors),
+            SectionTitle(label: 'Anticipación', color: colors.primary),
             const SizedBox(height: 12),
-            _SectionCard
+            SectionCard
             (
               child: Row
               (
@@ -176,76 +178,6 @@ class AboutScreen extends StatelessWidget
           ],
         ),
       ),
-    );
-  }
-}
-
-//barra de encabezado
-class _SectionTitle extends StatelessWidget 
-{
-  final String label;
-  final ColorScheme colors;
-
-  const _SectionTitle({required this.label, required this.colors});
-
-  @override
-  Widget build(BuildContext context) 
-  {
-    return Align
-    (
-      alignment: Alignment.centerLeft,
-      child: Row
-      (
-        children: 
-        [
-          Container
-          (
-            width: 4,
-            height: 18,
-            decoration: BoxDecoration
-            (
-              color: colors.primary,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-
-          const SizedBox(width: 8),
-          Text
-          (
-            label,
-            style: const TextStyle
-            (
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-//fondo para textos
-class _SectionCard extends StatelessWidget 
-{
-  final Widget child;
-
-  const _SectionCard({required this.child});
-
-  @override
-  Widget build(BuildContext context) 
-  {
-    return Container
-    (
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration
-      (
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: child,
     );
   }
 }
