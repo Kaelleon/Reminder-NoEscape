@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'history_screen.dart';
 import 'pending_tasks_screen.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class HomeScreen extends StatelessWidget
 {
@@ -9,68 +10,24 @@ class HomeScreen extends StatelessWidget
   @override
   Widget build(BuildContext context)
   {
+    WidgetsBinding.instance.addPostFrameCallback((_)
+    {
+      FlutterNativeSplash.remove();
+    });
+
+    final colors = Theme.of(context).colorScheme;
+    
     return DefaultTabController
     (
       length: 2,
       child: Scaffold
       (
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        backgroundColor: colors.tertiary,
         appBar: AppBar
         (
           title: const Text('Reminder: No Escape'),
-          actions: 
-          [
-            //menu de navegacion
-            PopupMenuButton<String>
-            (
-              onSelected: (value)
-              {
-                switch (value)
-                {
-                  case 'settings':
-                    Navigator.pushNamed(context, '/settings');
-                    break;
-                  case 'about':
-                    Navigator.pushNamed(context, '/about');
-                    break;
-                }
-              },
 
-              itemBuilder: (context) => 
-              [
-                //navegar a configuracion
-                const PopupMenuItem
-                (
-                  value: 'settings',
-                  child: Row
-                  (
-                    children: 
-                    [
-                      Icon(Icons.settings),
-                      SizedBox(width: 12),
-                      Text("Configuración"),
-                    ],
-                  ),
-                ),
-
-                //navegar al about
-                const PopupMenuItem
-                (
-                  value: 'about',
-                  child: Row
-                  (
-                    children: 
-                    [
-                      Icon(Icons.info_outline),
-                      SizedBox(width: 12),
-                      Text("Acerca de"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-
+          //navegacion entre pendientes e historial
           bottom: const TabBar
           (
             tabs: 
@@ -105,6 +62,110 @@ class HomeScreen extends StatelessWidget
             ],
           ),
         ),
+
+        //drawer de navegacion
+        drawer: Drawer
+        (
+          child: SafeArea
+          (
+            child: Column
+            (
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: 
+              [
+                //encabezado del drawer
+                DrawerHeader
+                (
+                  decoration: BoxDecoration(color: colors.secondary),
+                  child: Row
+                  (
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: 
+                    [
+                      CircleAvatar
+                      (
+                        radius: 32,
+                        backgroundImage: AssetImage('assets/images/profile.png')
+                      ),
+                      const SizedBox(width: 14),
+                      const Expanded
+                      (
+                        child: Column
+                        (
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: 
+                          [
+                            Text
+                            (
+                              'Capi',
+                              style: TextStyle
+                              (
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+
+                            Text
+                            (
+                              'capi@example.com',
+                              style: TextStyle
+                              (
+                                color: Colors.white70,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                //perfil
+                ListTile
+                (
+                  leading: Icon(Icons.person_outline, color: Color(0xFF5C6BC0)),
+                  title: const Text('Perfil'),
+                  onTap: ()
+                  {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/profile');
+                  },
+                ),
+
+                const Divider(),
+
+                //configuracion
+                ListTile
+                (
+                  leading: Icon(Icons.settings_outlined, color: Color(0xFF546E7A)),
+                  title: const Text('Configuración'),
+                  onTap: ()
+                  {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/settings');
+                  },
+                ),
+
+                //about
+                ListTile
+                (
+                  leading: Icon(Icons.info_outline, color: Color(0xFF26A69A)),
+                  title: const Text('Acerca de'),
+                  onTap: ()
+                  {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/about');
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+
         body: const TabBarView
         (
           children: 
