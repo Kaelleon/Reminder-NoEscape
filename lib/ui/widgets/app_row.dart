@@ -71,10 +71,10 @@ class AppRow extends StatelessWidget
                   Text
                   (
                     subtitle!,
-                    style: const TextStyle
+                    style: TextStyle
                     (
                       fontSize: 13,
-                      color: Color.fromARGB(255, 119, 119, 119),
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                       height: 1.4,
                     ),
                   ),

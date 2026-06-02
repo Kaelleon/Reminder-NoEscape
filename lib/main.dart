@@ -52,17 +52,25 @@ class MyApp extends StatelessWidget
       theme: ThemeData
       (
 
-        colorScheme: ColorScheme.fromSeed
+        colorScheme: ColorScheme.dark
         (
-          seedColor: const Color.fromARGB(255, 32, 87, 255),
-          primary: const Color.fromARGB(255, 255, 54, 54),
-          secondary: const Color.fromARGB(255, 53, 63, 252),
-          tertiary: const Color.fromARGB(255, 169, 216, 255),
+          primary: const Color(0xFFE11D48),       //rojo
+          secondary: const Color(0xFFFF6D00),     //naranja
+          tertiary: const Color(0xFF3F3F46),      //gris
+          surface: const Color(0xFF1C1C1F),       //superficies elevadas
+          onPrimary: const Color(0xFFF8FAFC),     //texto sobre primary
+          onSecondary: const Color(0xFFF8FAFC),   //texto sobre secondary
+          onSurface: const Color(0xFFF8FAFC),     //texto general
+          outline: const Color(0xFF3F3F46),       //bordes de contenedores
         ),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255), //fondo por defecto
+        scaffoldBackgroundColor: const Color(0xFF101012), //fondo por defecto
         textTheme: const TextTheme
         (
-          bodyMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+          bodyMedium: TextStyle
+          (
+            fontSize: 16.0, 
+            fontWeight: FontWeight.w500,
+          ),
         ),
         useMaterial3: true,
       ),

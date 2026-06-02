@@ -49,25 +49,25 @@ class SettingsScreen extends StatelessWidget
                   AppRow
                   (
                     icon: Icons.palette_outlined,
-                    iconColor: const Color(0xFF5C6BC0),
+                    iconColor: colors.primary,
                     label: 'Tema',
                     trailing: Text
                     (
                       'Claro',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                      style: TextStyle(fontSize: 13, color: colors.onSurface.withOpacity(0.5)),
                     ),
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  Divider(height: 1, color: colors.outline),
 
                   AppRow
                   (
                     icon: Icons.language_outlined,
-                    iconColor: const Color(0xFF26A69A),
+                    iconColor: colors.secondary,
                     label: 'Idioma',
                     trailing: Text
                     (
                       'Español',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                      style: TextStyle(fontSize: 13, color: colors.onSurface.withOpacity(0.5)),
                     ),
                   ),
                 ],
@@ -88,41 +88,41 @@ class SettingsScreen extends StatelessWidget
                   AppRow
                   (
                     icon: Icons.volume_up_outlined,
-                    iconColor: const Color(0xFFFFA726),
+                    iconColor: colors.secondary,
                     label: 'Sonido de alerta',
                     trailing: Text
                     (
                       'Predeterminado',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                      style: TextStyle(fontSize: 13, color: colors.onSurface.withOpacity(0.5)),
                     ),
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  Divider(height: 1, color: colors.outline),
 
                   AppRow
                   (
                     icon: Icons.vibration_rounded,
-                    iconColor: const Color(0xFF546E7A),
+                    iconColor: colors.tertiary,
                     label: 'Vibración',
                     trailing: Switch
                     (
                       value: true,
                       onChanged: (_) {},
-                      activeColor: colors.primary,
+                      activeColor: colors.secondary,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  Divider(height: 1, color: colors.outline),
 
                   AppRow
                   (
                     icon: Icons.flashlight_on_outlined,
-                    iconColor: const Color(0xFF26A69A),
+                    iconColor: colors.primary,
                     label: 'Flash de alerta',
                     trailing: Switch
                     (
                       value: false,
                       onChanged: null,
-                      activeColor: colors.primary,
+                      activeColor: colors.secondary,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
@@ -163,7 +163,7 @@ class SettingsScreen extends StatelessWidget
                   Text
                   (
                     'La única forma de detener los recordatorios es completando la tarea o esperando a que venza el tiempo límite. Esto es intencional para garantizar que no olvides tus tareas.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.5),
+                    style: TextStyle(fontSize: 13, color: colors.onSurface.withOpacity(0.6), height: 1.5),
                   ),
                 ],
               ),
@@ -199,7 +199,7 @@ class SettingsScreen extends StatelessWidget
                   Text
                   (
                     'Al presionar ese botón en la alerta, se activa una pausa temporal de 30 minutos para que los recordatorios no te interrumpan mientras trabajas en la tarea.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.5),
+                    style: TextStyle(fontSize: 13, color: colors.onSurface.withOpacity(0.6), height: 1.5),
                   ),
                 ],
               ),
@@ -235,7 +235,7 @@ class SettingsScreen extends StatelessWidget
                   Text
                   (
                     'El intervalo se define al momento de crear cada recordatorio. Puedes elegir que la alerta se repita cada 30 segundos, 1 minuto, 5 minutos, entre otros.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.5),
+                    style: TextStyle(fontSize: 13, color: colors.onSurface.withOpacity(0.6), height: 1.5),
                   ),
                 ],
               ),
@@ -271,7 +271,7 @@ class SettingsScreen extends StatelessWidget
                   Text
                   (
                     'Es el tiempo previo al límite de la tarea en el que la app comenzará a mostrarte recordatorios. Por ejemplo, si configuras 10 minutos de anticipación, las alertas empezarán 10 minutos antes del vencimiento.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.5),
+                    style: TextStyle(fontSize: 13, color: colors.onSurface.withOpacity(0.6), height: 1.5),
                   ),
                 ],
               ),
@@ -294,25 +294,25 @@ class SettingsScreen extends StatelessWidget
                     icon: Icons.bug_report_outlined,
                     iconColor: colors.primary,
                     label: 'Reportar un problema',
-                    trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
+                    trailing: Icon(Icons.chevron_right, color: colors.onSurface.withOpacity(0.5)),
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  Divider(height: 1, color: colors.outline),
 
                   AppRow
                   (
                     icon: Icons.star_outline_rounded,
-                    iconColor: const Color(0xFFFFA726),
+                    iconColor: colors.secondary,
                     label: 'Calificar la app',
-                    trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
+                    trailing: Icon(Icons.chevron_right, color: colors.onSurface.withOpacity(0.5)),
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  Divider(height: 1, color: colors.outline),
 
                   AppRow
                   (
                     icon: Icons.privacy_tip_outlined,
-                    iconColor: const Color(0xFF546E7A),
+                    iconColor: colors.tertiary,
                     label: 'Política de privacidad',
-                    trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
+                    trailing: Icon(Icons.chevron_right, color: colors.onSurface.withOpacity(0.5)),
                   ),
                 ],
               ),

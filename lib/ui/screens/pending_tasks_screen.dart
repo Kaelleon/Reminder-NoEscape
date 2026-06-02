@@ -53,6 +53,9 @@ class _PendingTaskScreenState extends State<PendingTasksScreen>
   Widget build(BuildContext context)
   {
     super.build(context);
+
+    final colors = Theme.of(context).colorScheme;
+
     return Scaffold
     (
       backgroundColor: Colors.transparent,
@@ -86,6 +89,8 @@ class _PendingTaskScreenState extends State<PendingTasksScreen>
       (
         onPressed: _openAddTaskSheet,
         tooltip: "Agregar recordatorio",
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary,
         child: const Icon(Icons.add),
       ),
     );

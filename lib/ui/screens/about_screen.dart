@@ -71,7 +71,7 @@ class AboutScreen extends StatelessWidget
               style: TextStyle
               (
                 fontSize: 13,
-                color: const Color.fromARGB(255, 119, 119, 119),
+                color: colors.onSurface.withOpacity(0.5),
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -167,7 +167,7 @@ class AboutScreen extends StatelessWidget
               style: TextStyle
               (
                 fontSize: 12,
-                color: const Color.fromARGB(255, 119, 119, 119),
+                color: colors.onSurface.withOpacity(0.5),
               ),
             ),
             const SizedBox(height: 8),
@@ -178,7 +178,7 @@ class AboutScreen extends StatelessWidget
               style: TextStyle
               (
                 fontSize: 12,
-                color: const Color.fromARGB(255, 119, 119, 119),
+                color: colors.onSurface.withOpacity(0.5),
               ),
             ),
             const SizedBox(height: 24),

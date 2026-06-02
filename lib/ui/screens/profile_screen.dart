@@ -59,7 +59,7 @@ class ProfileScreen extends StatelessWidget
               mainAxisAlignment: MainAxisAlignment.center,
               children: 
               [
-                Icon(Icons.email_outlined, size: 15, color: Colors.grey[500]),
+                Icon(Icons.email_outlined, size: 15, color: colors.onSurface.withOpacity(0.5)),
                 const SizedBox(width: 6),
                 Text
                 (
@@ -67,7 +67,7 @@ class ProfileScreen extends StatelessWidget
                   style: TextStyle
                   (
                     fontSize: 13,
-                    color: Colors.grey[500],
+                    color: colors.onSurface.withOpacity(0.5),
                   ),
                 ),
               ],
@@ -88,8 +88,9 @@ class ProfileScreen extends StatelessWidget
                     height: 18,
                     decoration: BoxDecoration
                     (
-                      color: colors.primary,
+                      color: colors.surface,
                       borderRadius: BorderRadius.circular(2),
+                      border: Border.all(color: colors.outline)
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -114,7 +115,7 @@ class ProfileScreen extends StatelessWidget
                   child: _StatCard
                   (
                     icon: Icons.check_circle_rounded,
-                    iconColor: Colors.green,
+                    iconColor: colors.secondary,
                     label: 'Completadas',
                     value: '24',
                   ),
@@ -127,7 +128,7 @@ class ProfileScreen extends StatelessWidget
                   child: _StatCard
                   (
                     icon: Icons.pending_actions_rounded,
-                    iconColor: const Color(0xFF5C6BC0),
+                    iconColor: colors.primary,
                     label: 'Pendientes',
                     value: '5',
                   ),
@@ -145,7 +146,7 @@ class ProfileScreen extends StatelessWidget
                   child: _StatCard
                   (
                     icon: Icons.timer_off_rounded,
-                    iconColor: colors.primary,
+                    iconColor: colors.tertiary,
                     label: 'Vencidas',
                     value: '3',
                   ),
@@ -157,7 +158,7 @@ class ProfileScreen extends StatelessWidget
                   child: _StatCard
                   (
                     icon: Icons.bar_chart_rounded,
-                    iconColor: const Color(0xFF26A69A),
+                    iconColor: colors.secondary,
                     label: 'Total',
                     value: '32',
                   ),
@@ -180,8 +181,9 @@ class ProfileScreen extends StatelessWidget
                     height: 18,
                     decoration: BoxDecoration
                     (
-                      color: colors.primary,
+                      color: colors.surface,
                       borderRadius: BorderRadius.circular(2),
+                      border: Border.all(color: colors.outline)
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -201,9 +203,9 @@ class ProfileScreen extends StatelessWidget
               width: double.infinity,
               decoration: BoxDecoration 
               (
-                color: Colors.grey[50],
+                color: colors.surface,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: colors.outline),
               ),
 
               child: Column
@@ -213,25 +215,25 @@ class ProfileScreen extends StatelessWidget
                   _InfoRow
                   (
                     icon: Icons.person_outline,
-                    iconColor: const Color(0xFF5C6BC0),
+                    iconColor: colors.primary,
                     label: 'Nombre',
                     value: 'Capi',
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  Divider(height: 1, color: colors.outline),
 
                   _InfoRow
                   (
                     icon: Icons.email_outlined,
-                    iconColor: const Color(0xFF26A69A),
+                    iconColor: colors.secondary,
                     label: 'Correo',
                     value: 'capi@example.com',
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  Divider(height: 1, color: colors.outline),
 
                   _InfoRow
                   (
                     icon: Icons.calendar_today_outlined,
-                    iconColor: const Color(0xFF546E7A),
+                    iconColor: colors.tertiary,
                     label: 'Miembro desde',
                     value: 'Mayo 2026',
                   ),
@@ -265,14 +267,16 @@ class _StatCard extends StatelessWidget
   @override
   Widget build(BuildContext context) 
   {
+    final colors = Theme.of(context).colorScheme;
+
     return Container
     (
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       decoration: BoxDecoration
       (
-        color: Colors.grey[50],
+        color: colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: colors.outline),
       ),
 
       child: Column
@@ -298,7 +302,7 @@ class _StatCard extends StatelessWidget
             style: TextStyle
             (
               fontSize: 12,
-              color: Colors.grey[500],
+              color: colors.onSurface.withOpacity(0.5),
             ),
           ),
         ],
@@ -326,6 +330,8 @@ class _InfoRow extends StatelessWidget
   @override
   Widget build(BuildContext context) 
   {
+    final colors = Theme.of(context).colorScheme;
+
     return Padding
     (
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -341,7 +347,7 @@ class _InfoRow extends StatelessWidget
             style: TextStyle
             (
               fontSize: 13,
-              color: Colors.grey[500],
+              color: colors.onSurface.withOpacity(0.5),
             ),
           ),
           const Spacer(),

@@ -26,10 +26,16 @@ class HomeScreen extends StatelessWidget
         appBar: AppBar
         (
           title: const Text('Reminder: No Escape'),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          foregroundColor: colors.onSurface,
 
           //navegacion entre pendientes e historial
-          bottom: const TabBar
+          bottom: TabBar
           (
+            labelColor: colors.secondary,
+            unselectedLabelColor: colors.tertiary,
+            indicatorColor: colors.secondary,
+
             tabs: 
             [
               Tab
@@ -76,7 +82,7 @@ class HomeScreen extends StatelessWidget
                 //encabezado del drawer
                 DrawerHeader
                 (
-                  decoration: BoxDecoration(color: colors.secondary),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
                   child: Row
                   (
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,7 +133,7 @@ class HomeScreen extends StatelessWidget
                 //perfil
                 ListTile
                 (
-                  leading: Icon(Icons.person_outline, color: Color(0xFF5C6BC0)),
+                  leading: Icon(Icons.person_outline, color: colors.primary),
                   title: const Text('Perfil'),
                   onTap: ()
                   {
@@ -141,7 +147,7 @@ class HomeScreen extends StatelessWidget
                 //configuracion
                 ListTile
                 (
-                  leading: Icon(Icons.settings_outlined, color: Color(0xFF546E7A)),
+                  leading: Icon(Icons.settings_outlined, color: colors.tertiary),
                   title: const Text('Configuración'),
                   onTap: ()
                   {
@@ -153,7 +159,7 @@ class HomeScreen extends StatelessWidget
                 //about
                 ListTile
                 (
-                  leading: Icon(Icons.info_outline, color: Color(0xFF26A69A)),
+                  leading: Icon(Icons.info_outline, color: colors.secondary),
                   title: const Text('Acerca de'),
                   onTap: ()
                   {

@@ -9,7 +9,7 @@ class HistoryScreen extends StatelessWidget
 
    static final List<Task> _mockTasks =
   [
-    Task
+    /*Task
     (
       title: "Entregar informe",
       description: "Informe mensual de ventas",
@@ -47,7 +47,7 @@ class HistoryScreen extends StatelessWidget
       anticipationTime: DateTime(2025, 5, 4, 13, 0),
       reminderInterval: const Duration(hours: 2),
       isCompleted: false,
-    ),
+    ),*/
   ];
 
   @override

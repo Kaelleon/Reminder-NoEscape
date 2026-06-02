@@ -15,9 +15,9 @@ class SectionCard extends StatelessWidget
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration
       (
-        color: Colors.grey[50],
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
       ),
       child: child,
     );
