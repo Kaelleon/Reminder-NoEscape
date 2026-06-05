@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reminder_noescape/core/services/storage_service.dart';
+import 'package:reminder_noescape/models/preferences_view_model.dart';
 import 'package:reminder_noescape/ui/screens/home_screen.dart';
 import 'package:reminder_noescape/ui/screens/settings_screen.dart';
 import 'package:reminder_noescape/ui/screens/about_screen.dart';
@@ -7,11 +10,23 @@ import 'package:reminder_noescape/ui/screens/task_detail_screen.dart';
 import 'package:reminder_noescape/ui/screens/profile_screen.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() 
+void main() async 
 {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(const MyApp());
+  await StorageService.init();
+  
+  runApp
+  (
+    MultiProvider
+    (
+      providers: 
+      [
+        ChangeNotifierProvider(create: (_) => PreferencesViewModel()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget 
