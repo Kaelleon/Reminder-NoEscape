@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_noescape/core/services/storage_service.dart';
 import 'package:reminder_noescape/models/preferences_view_model.dart';
+import 'package:reminder_noescape/ui/screens/evaluation_screen.dart';
 import 'package:reminder_noescape/ui/screens/home_screen.dart';
 import 'package:reminder_noescape/ui/screens/settings_screen.dart';
 import 'package:reminder_noescape/ui/screens/about_screen.dart';
@@ -9,6 +10,7 @@ import 'package:reminder_noescape/models/task_model.dart';
 import 'package:reminder_noescape/ui/screens/task_detail_screen.dart';
 import 'package:reminder_noescape/ui/screens/profile_screen.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:reminder_noescape/models/evaluation_view_model.dart';
 
 void main() async 
 {
@@ -23,6 +25,7 @@ void main() async
       providers: 
       [
         ChangeNotifierProvider(create: (_) => PreferencesViewModel()),
+        ChangeNotifierProvider(create: (_) => EvaluationViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -47,6 +50,7 @@ class MyApp extends StatelessWidget
         '/settings': (context) => const SettingsScreen(),
         '/about': (context) => const AboutScreen(),
         '/profile' : (context) => const ProfileScreen(),
+        '/evaluation' : (context) => const EvaluationScreen(),
       },
 
       //rutas de pantallas dinamicas

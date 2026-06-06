@@ -606,18 +606,24 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
                 Divider(height: 1, color: colors.outline),
 
-                Padding
+                GestureDetector
                 (
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  child: Row
+                  onTap: () => Navigator.pushNamed(context, '/evaluation'),
+                  behavior: HitTestBehavior.opaque,
+
+                  child:Padding
                   (
-                    children: 
-                    [
-                      Icon(Icons.star_outline_rounded, color: colors.secondary, size: 22),
-                      const SizedBox(width: 12),
-                      const Expanded(child: Text('Calificar la app', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
-                      Icon(Icons.chevron_right, color: colors.onSurface.withOpacity(0.5)),
-                    ],
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: Row
+                    (
+                      children: 
+                      [
+                        Icon(Icons.star_outline_rounded, color: colors.secondary, size: 22),
+                        const SizedBox(width: 12),
+                        const Expanded(child: Text('Calificar la app', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
+                        Icon(Icons.chevron_right, color: colors.onSurface.withOpacity(0.5)),
+                      ],
+                    ),
                   ),
                 ),
                 Divider(height: 1, color: colors.outline),

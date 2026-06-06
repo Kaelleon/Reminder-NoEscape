@@ -1,0 +1,73 @@
+{
+    "usabilidad": 
+    [
+        {
+            "titulo": "Pregunta 1: ¿Qué tan fácil fue crear y configurar un nuevo recordatorio?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        },
+
+        {
+            "titulo": "Pregunta 2: ¿Qué tan fácil fue navegar entre las secciones de la app (Pendientes, Historial, Configuración)?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        },
+
+        {
+            "titulo": "Pregunta 3: ¿Cómo calificas la interfaz visual de la aplicación en términos de diseño y claridad?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        }
+    ],
+
+    "contenido": 
+    [
+        {
+            "titulo": "Pregunta 1: ¿Qué tan útil consideras el sistema de alertas insistentes para recordarte tus tareas?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        },
+
+        {
+            "titulo": "Pregunta 2: ¿Qué tan satisfecho estás con las opciones de configuración de alertas (vibración, flash, sonido, duración)?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        },
+
+        {
+            "titulo": "Pregunta 3: ¿El historial de tareas completadas y vencidas te resulta útil para hacer seguimiento de tus pendientes?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        }
+    ],
+
+    "compartir": 
+    [
+        {
+            "titulo": "Pregunta 1: ¿Qué tan probable es que recomiendes Reminder: No Escape a alguien que necesite organizarse mejor?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        },
+
+        {
+            "titulo": "Pregunta 2: ¿Crees que el enfoque de alertas insistentes es una solución efectiva para personas que olvidan sus tareas con frecuencia?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        },
+        
+        {
+            "titulo": "Pregunta 3: ¿Considerarías usar Reminder: No Escape como tu app principal para gestionar recordatorios importantes?",
+            "valor": 0,
+            "min": "Muy difícil",
+            "max": "Muy fácil"
+        }
+    ]
+}
