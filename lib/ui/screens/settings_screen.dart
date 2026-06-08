@@ -1,16 +1,217 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reminder_noescape/ui/widgets/app_row.dart';
-import 'package:reminder_noescape/ui/widgets/section_title.dart';
 import 'package:reminder_noescape/ui/widgets/section_card.dart';
+import 'package:reminder_noescape/ui/widgets/section_title.dart';
+import 'package:reminder_noescape/models/preferences_view_model.dart';
 
-class SettingsScreen extends StatelessWidget
+class SettingsScreen extends StatefulWidget
 {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() =>  _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> 
+{
+  //controla la expasion de preguntas de ayuda
+  final Map<int, bool> _expandedHelp = {};
+
+  //opciones
+  static const _vibrationIntensities = 
+  {
+    'soft': 'Suave',
+    'normal': 'Normal',
+    'strong': 'Fuerte',
+  };
+
+  static const _vibrationPatterns = 
+  {
+    'single': 'Un pulso',
+    'double': 'Doble pulso',
+    'short_long': 'Corto-largo',
+    'sos': 'SOS',
+    'escalating': 'Escalante',
+  };
+
+  static const _alertSounds = 
+  {
+    'default': 'Predeterminado',
+    'bell': 'Campana',
+    'alarm': 'Alarma',
+    'chime': 'Carillón',
+    'buzzer': 'Zumbido',
+    'custom': 'Personalizado',
+  };
+
+  static const _alertDurations = 
+  {
+    10: '10 segundos',
+    20: '20 segundos',
+    30: '30 segundos',
+    60: '1 minuto',
+    120: '2 minutos',
+    300: '5 minutos',
+  };
+
+  static const _flashFrequencies = 
+  {
+    1: '1 vez/seg',
+    2: '2 veces/seg',
+    3: '3 veces/seg',
+    5: '5 veces/seg',
+  };
+
+  static const _helpItems = 
+  [
+    {
+      'question': '¿Por qué no puedo detener la alerta permanentemente?',
+      'answer': 'La única forma de detener los recordatorios es completando la tarea o esperando a que venza el tiempo límite. Esto es intencional para garantizar que no olvides tus tareas.',
+    },
+
+    {
+      'question': '¿Qué significa el modo "Realizando tarea"?',
+      'answer': 'Al presionar ese botón en la alerta, se activa una pausa temporal de 30 minutos para que los recordatorios no te interrumpan mientras trabajas en la tarea.',
+    },
+
+    {
+      'question': '¿Cómo configuro el intervalo de repetición?',
+      'answer': 'El intervalo se define al momento de crear cada recordatorio. Puedes elegir que la alerta se repita cada 30 segundos, 1 minuto, 5 minutos, entre otros.',
+    },
+
+    {
+      'question': '¿Qué es el tiempo de anticipación?',
+      'answer': 'Es el tiempo previo al límite de la tarea en el que la app comenzará a mostrarte recordatorios. Por ejemplo, si configuras 10 minutos de anticipación, las alertas empezarán 10 minutos antes del vencimiento.',
+    },
+  ];
+
+  Widget _buildSelector<T>
+  ({
+    required String label,
+    required T current,
+    required Map<T, String> options,
+    required Future<void> Function(T) onSelected,
+    required Color color,
+    required IconData icon,
+  })
+  
+  {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row
+      (
+        children: 
+        [
+          Icon(icon, color: color, size: 22),
+          const SizedBox(width: 12),
+          Expanded 
+          (
+            child: Text
+            (
+              label,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+          ),
+
+          GestureDetector
+          (
+            onTap: () => _showOptions<T>
+            (
+              label: label,
+              current: current,
+              options: options,
+              onSelected: onSelected,
+            ),
+
+            child: Row
+            (
+              children:
+              [
+                Text
+                (
+                  options[current] ?? '',
+                  style: TextStyle
+                  (
+                    fontSize: 13,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  ),
+                ),
+                const SizedBox(width: 4),
+
+                Icon
+                (
+                  Icons.chevron_right,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showOptions<T>
+  ({
+    required String label,
+    required T current,
+    required Map<T, String> options,
+    required Future<void> Function(T) onSelected,
+  }) 
+  {
+    final colors = Theme.of(context).colorScheme;
+    showModalBottomSheet
+    (
+      context: context,
+      backgroundColor: colors.surface,
+      shape: const RoundedRectangleBorder
+      (
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => Column
+      (
+        mainAxisSize: MainAxisSize.min,
+        children: 
+        [
+          const SizedBox(height: 12),
+          Container
+          (
+            width: 40, height: 4,
+            decoration: BoxDecoration
+            (
+              color: colors.outline,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          ...options.entries.map((e) => ListTile
+          (
+            title: Text(e.value),
+            trailing: e.key == current
+                ? Icon(Icons.check, color: colors.primary)
+                : null,
+            onTap: () 
+            {
+              onSelected(e.key);
+              Navigator.pop(context);
+            },
+          )),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context)
   {
     final colors = Theme.of(context).colorScheme;
+    final prefs = context.watch<PreferencesViewModel>();
 
     return Scaffold
     (
@@ -46,37 +247,33 @@ class SettingsScreen extends StatelessWidget
               (
                 children:
                 [
-                  AppRow
+                  _buildSelector
                   (
-                    icon: Icons.palette_outlined,
-                    iconColor: const Color(0xFF5C6BC0),
                     label: 'Tema',
-                    trailing: Text
-                    (
-                      'Claro',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                    ),
+                    icon: Icons.palette_outlined,
+                    color: colors.primary,
+                    current: prefs.theme,
+                    options: const {'dark':'Oscuro', 'light':'Claro'},
+                    onSelected: prefs.setTheme,
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  Divider(height: 1, color: colors.outline),
 
-                  AppRow
+                  _buildSelector
                   (
-                    icon: Icons.language_outlined,
-                    iconColor: const Color(0xFF26A69A),
                     label: 'Idioma',
-                    trailing: Text
-                    (
-                      'Español',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                    ),
+                    icon: Icons.language_outlined,
+                    color: colors.secondary,
+                    current: prefs.language,
+                    options: const {'es':'Español', 'en':'English'},
+                    onSelected: prefs.setLanguage,
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
 
-            //sonido y notificaciones
-            SectionTitle(color: colors.primary, label: 'Sonido y notificaciones'),
+            //sonido
+            SectionTitle(color: colors.primary, label: 'Sonido'),
             const SizedBox(height: 12),
 
             SectionCard
@@ -85,199 +282,305 @@ class SettingsScreen extends StatelessWidget
               (
                 children:
                 [
-                  AppRow
+                  _buildSelector
                   (
-                    icon: Icons.volume_up_outlined,
-                    iconColor: const Color(0xFFFFA726),
                     label: 'Sonido de alerta',
-                    trailing: Text
-                    (
-                      'Predeterminado',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                    ),
+                    icon: Icons.volume_up_outlined,
+                    color: colors.secondary,
+                    current: prefs.alertSound,
+                    options: _alertSounds,
+                    onSelected: prefs.setAlertSound,
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                  if (prefs.alertSound == 'custom') ...
+                  [
+                    Divider(height: 1, color: colors.outline),
+                    Padding
+                    (
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      child: Row
+                      (
+                        children: 
+                        [
+                          Icon(Icons.audio_file_outlined, color: colors.secondary, size: 22),
+                          const SizedBox(width: 12),
+                          Expanded
+                          (
+                            child: Text
+                            (
+                              prefs.customSoundPath != null
+                                  ? prefs.customSoundPath!.split('/').last
+                                  : 'Ningún archivo seleccionado',
+                              style: TextStyle
+                              (
+                                fontSize: 13,
+                                color: colors.onSurface.withOpacity(0.5),
+                              ),
+                            ),
+                          ),
+                          TextButton
+                          (
+                            onPressed: () {},
+                            child: Text('Elegir', style: TextStyle(color: colors.primary)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
 
-                  AppRow
+                  Divider(height: 1, color: colors.outline),
+                  Padding
                   (
-                    icon: Icons.vibration_rounded,
-                    iconColor: const Color(0xFF546E7A),
-                    label: 'Vibración',
-                    trailing: Switch
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: Row
                     (
-                      value: true,
-                      onChanged: (_) {},
-                      activeColor: colors.primary,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      children: 
+                      [
+                        Icon(Icons.play_circle_outline, color: colors.primary, size: 22),
+                        const SizedBox(width: 12),
+                        const Expanded
+                        (
+                          child: Text('Vista previa', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ),
+                        TextButton
+                        (
+                          onPressed: () {},
+                          child: Text('Reproducir', style: TextStyle(color: colors.primary)),
+                        ),
+                      ],
                     ),
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
-
-                  AppRow
-                  (
-                    icon: Icons.flashlight_on_outlined,
-                    iconColor: const Color(0xFF26A69A),
-                    label: 'Flash de alerta',
-                    trailing: Switch
-                    (
-                      value: false,
-                      onChanged: null,
-                      activeColor: colors.primary,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                  ),
-                ],
+                ]
               ),
             ),
             const SizedBox(height: 20),
 
-            //ayuda
+            //vibracion
+            SectionTitle(color: colors.primary, label: 'Vibración'),
+            const SizedBox(height: 12),
+
+            SectionCard
+            (
+              child: Column(children: 
+              [
+                Padding
+                (
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  child: Row
+                  (
+                    children: 
+                    [
+                      Icon(Icons.vibration_rounded, color: colors.tertiary, size: 22),
+                      const SizedBox(width: 12),
+                      const Expanded
+                      (
+                        child: Text('Vibración', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                      ),
+                      Switch
+                      (
+                        value: prefs.vibration,
+                        onChanged: prefs.setVibration,
+                        activeColor: colors.secondary,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ],
+                  ),
+                ),
+
+                if (prefs.vibration) ...
+                [
+                  Divider(height: 1, color: colors.outline),
+                  _buildSelector
+                  (
+                    label: 'Intensidad',
+                    icon: Icons.signal_cellular_alt_rounded,
+                    color: colors.tertiary,
+                    current: prefs.vibrationIntensity,
+                    options: _vibrationIntensities,
+                    onSelected: prefs.setVibrationIntensity,
+                  ),
+                  Divider(height: 1, color: colors.outline),
+
+                  _buildSelector
+                  (
+                    label: 'Patrón',
+                    icon: Icons.pattern_rounded,
+                    color: colors.tertiary,
+                    current: prefs.vibrationPattern,
+                    options: _vibrationPatterns,
+                    onSelected: prefs.setVibrationPattern,
+                  ),
+                ],
+              ]),
+            ),
+            const SizedBox(height: 20),
+
+            //flash
+            SectionTitle(color: colors.primary, label: 'Flash'),
+            const SizedBox(height: 12),
+
+            SectionCard
+            (
+              child: Column(children: 
+              [
+                Padding
+                (
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  child: Row
+                  (
+                    children: 
+                    [
+                      Icon(Icons.flashlight_on_outlined, color: colors.primary, size: 22),
+                      const SizedBox(width: 12),
+                      const Expanded
+                      (
+                        child: Text('Flash de alerta', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                      ),
+                      Switch
+                      (
+                        value: prefs.flash,
+                        onChanged: prefs.setFlash,
+                        activeColor: colors.secondary,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ],
+                  ),
+                ),
+
+                if (prefs.flash) ...
+                [
+                  Divider(height: 1, color: colors.outline),
+                  _buildSelector
+                  (
+                    label: 'Frecuencia de parpadeo',
+                    icon: Icons.speed_rounded,
+                    color: colors.primary,
+                    current: prefs.flashFrequency,
+                    options: _flashFrequencies,
+                    onSelected: prefs.setFlashFrequency,
+                  ),
+                  Divider(height: 1, color: colors.outline),
+                  
+                  Padding
+                  (
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: Row
+                    (
+                      children: 
+                      [
+                        Icon(Icons.mobile_off_outlined, color: colors.primary, size: 22),
+                        const SizedBox(width: 12),
+                        const Expanded
+                        (
+                          child: Column
+                          (
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: 
+                            [
+                              Text('Solo con pantalla apagada', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                              SizedBox(height: 2),
+                              Text('Activa el flash únicamente si la pantalla está apagada', style: TextStyle(fontSize: 12)),
+                            ],
+                          ),
+                        ),
+
+                        Switch
+                        (
+                          value: prefs.flashOnlyScreenOff,
+                          onChanged: prefs.setFlashOnlyScreenOff,
+                          activeColor: colors.secondary,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ]),
+            ),
+            const SizedBox(height: 20),
+
+            //Duracionde alerta
+            SectionTitle(color: colors.primary, label: 'Alerta'),
+            const SizedBox(height: 12),
+
+            SectionCard
+            (
+              child: _buildSelector
+              (
+                label: 'Duración de la alerta',
+                icon: Icons.timer_outlined,
+                color: colors.secondary,
+                current: prefs.alertDuration,
+                options: _alertDurations,
+                onSelected: prefs.setAlertDuration,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            //ayuda colapsable
             SectionTitle(color: colors.primary, label: 'Ayuda'),
             const SizedBox(height: 12),
 
-            SectionCard
-            (
-              child: Column
+            ...List.generate(_helpItems.length, (i) 
+            {
+              final isExpanded = _expandedHelp[i] ?? false;
+              return Padding
               (
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                [
-                  Row
+                padding: const EdgeInsets.only(bottom: 10),
+                child: SectionCard
+                (
+                  child: Column
                   (
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
+                    children: 
                     [
-                      Icon(Icons.help_outline_rounded, size: 18, color: colors.primary),
-                      const SizedBox(width: 8),
-                      const Expanded
+                      GestureDetector
                       (
-                        child: Text
+                        onTap: () => setState(() => _expandedHelp[i] = !isExpanded),
+                        behavior: HitTestBehavior.opaque,
+                        child: Row
                         (
-                          '¿Por qué no puedo detener la alerta permanentemente?',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                          children: 
+                          [
+                            Icon(Icons.help_outline_rounded, size: 18, color: colors.primary),
+                            const SizedBox(width: 8),
+                            Expanded
+                            (
+                              child: Text
+                              (
+                                _helpItems[i]['question']!,
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+
+                            Icon
+                            (
+                              isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                              color: colors.onSurface.withOpacity(0.5),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text
-                  (
-                    'La única forma de detener los recordatorios es completando la tarea o esperando a que venza el tiempo límite. Esto es intencional para garantizar que no olvides tus tareas.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.5),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
 
-            SectionCard
-            (
-              child: Column
-              (
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                [
-                  Row
-                  (
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
-                    [
-                      Icon(Icons.help_outline_rounded, size: 18, color: colors.primary),
-                      const SizedBox(width: 8),
-                      const Expanded
-                      (
-                        child: Text
+                      if (isExpanded) ...
+                      [
+                        const SizedBox(height: 8),
+                        Text
                         (
-                          '¿Qué significa el modo "Realizando tarea"?',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                          _helpItems[i]['answer']!,
+                          style: TextStyle
+                          (
+                            fontSize: 13,
+                            color: colors.onSurface.withOpacity(0.6),
+                            height: 1.5,
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
-                  const SizedBox(height: 8),
-
-                  Text
-                  (
-                    'Al presionar ese botón en la alerta, se activa una pausa temporal de 30 minutos para que los recordatorios no te interrumpan mientras trabajas en la tarea.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.5),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            SectionCard
-            (
-              child: Column
-              (
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                [
-                  Row
-                  (
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
-                    [
-                      Icon(Icons.help_outline_rounded, size: 18, color: colors.primary),
-                      const SizedBox(width: 8),
-                      const Expanded
-                      (
-                        child: Text
-                        (
-                          '¿Cómo configuro el intervalo de repetición?',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  Text
-                  (
-                    'El intervalo se define al momento de crear cada recordatorio. Puedes elegir que la alerta se repita cada 30 segundos, 1 minuto, 5 minutos, entre otros.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.5),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            SectionCard
-            (
-              child: Column
-              (
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                [
-                  Row
-                  (
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
-                    [
-                      Icon(Icons.help_outline_rounded, size: 18, color: colors.primary),
-                      const SizedBox(width: 8),
-                      const Expanded
-                      (
-                        child: Text
-                        (
-                          '¿Qué es el tiempo de anticipación?',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  Text
-                  (
-                    'Es el tiempo previo al límite de la tarea en el que la app comenzará a mostrarte recordatorios. Por ejemplo, si configuras 10 minutos de anticipación, las alertas empezarán 10 minutos antes del vencimiento.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[600], height: 1.5),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
-
+                ),
+              );
+            }),
+            const SizedBox(height: 20),
 
             //soporte
             SectionTitle(color: colors.primary, label: 'Soporte'),
@@ -285,37 +588,61 @@ class SettingsScreen extends StatelessWidget
 
             SectionCard
             (
-              child: Column
-              (
-                children:
-                [
-                  AppRow
+              child: Column(children:
+              [
+                Padding
+                (
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  child: Row
                   (
-                    icon: Icons.bug_report_outlined,
-                    iconColor: colors.primary,
-                    label: 'Reportar un problema',
-                    trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
+                    children: 
+                    [
+                      Icon(Icons.bug_report_outlined, color: colors.primary, size: 22),
+                      const SizedBox(width: 12),
+                      const Expanded(child: Text('Reportar un problema', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
+                      Icon(Icons.chevron_right, color: colors.onSurface.withOpacity(0.5)),
+                    ],
                   ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                ),
+                Divider(height: 1, color: colors.outline),
 
-                  AppRow
-                  (
-                    icon: Icons.star_outline_rounded,
-                    iconColor: const Color(0xFFFFA726),
-                    label: 'Calificar la app',
-                    trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
-                  ),
-                  Divider(height: 1, color: Colors.grey.shade200),
+                GestureDetector
+                (
+                  onTap: () => Navigator.pushNamed(context, '/evaluation'),
+                  behavior: HitTestBehavior.opaque,
 
-                  AppRow
+                  child:Padding
                   (
-                    icon: Icons.privacy_tip_outlined,
-                    iconColor: const Color(0xFF546E7A),
-                    label: 'Política de privacidad',
-                    trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: Row
+                    (
+                      children: 
+                      [
+                        Icon(Icons.star_outline_rounded, color: colors.secondary, size: 22),
+                        const SizedBox(width: 12),
+                        const Expanded(child: Text('Calificar la app', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
+                        Icon(Icons.chevron_right, color: colors.onSurface.withOpacity(0.5)),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+                Divider(height: 1, color: colors.outline),
+
+                Padding
+                (
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  child: Row
+                  (
+                    children: 
+                    [
+                      Icon(Icons.privacy_tip_outlined, color: colors.tertiary, size: 22),
+                      const SizedBox(width: 12),
+                      const Expanded(child: Text('Política de privacidad', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
+                      Icon(Icons.chevron_right, color: colors.onSurface.withOpacity(0.5)),
+                    ],
+                  ),
+                ),
+              ]),
             ),
             const SizedBox(height: 24),
           ],

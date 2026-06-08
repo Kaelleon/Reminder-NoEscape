@@ -30,11 +30,15 @@ class TaskDetailScreen extends StatelessWidget
   @override
   Widget build(BuildContext context) 
   {
+    final colors = Theme.of(context).colorScheme;
+
     return Scaffold
     (
       appBar: AppBar
       (
         title: const Text("Detalle del recordatorio"),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        foregroundColor: colors.onSurface,
       ),
 
       body: Padding
@@ -144,7 +148,11 @@ class _DetailItem extends StatelessWidget
               Text
               (
                 label,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: TextStyle
+                (
+                  fontSize: 12, 
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
+                ),
               ),
 
               Text

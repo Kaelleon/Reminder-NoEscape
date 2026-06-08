@@ -1,4 +1,4 @@
-package com.example.reminder_noescape
+package cl.Capi.ReminderNoEscape
 
 import io.flutter.embedding.android.FlutterActivity
 

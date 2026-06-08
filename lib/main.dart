@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reminder_noescape/core/services/storage_service.dart';
+import 'package:reminder_noescape/models/preferences_view_model.dart';
+import 'package:reminder_noescape/ui/screens/evaluation_screen.dart';
 import 'package:reminder_noescape/ui/screens/home_screen.dart';
 import 'package:reminder_noescape/ui/screens/settings_screen.dart';
 import 'package:reminder_noescape/ui/screens/about_screen.dart';
@@ -6,12 +10,26 @@ import 'package:reminder_noescape/models/task_model.dart';
 import 'package:reminder_noescape/ui/screens/task_detail_screen.dart';
 import 'package:reminder_noescape/ui/screens/profile_screen.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:reminder_noescape/models/evaluation_view_model.dart';
 
-void main() 
+void main() async 
 {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(const MyApp());
+  await StorageService.init();
+  
+  runApp
+  (
+    MultiProvider
+    (
+      providers: 
+      [
+        ChangeNotifierProvider(create: (_) => PreferencesViewModel()),
+        ChangeNotifierProvider(create: (_) => EvaluationViewModel()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget 
@@ -32,6 +50,7 @@ class MyApp extends StatelessWidget
         '/settings': (context) => const SettingsScreen(),
         '/about': (context) => const AboutScreen(),
         '/profile' : (context) => const ProfileScreen(),
+        '/evaluation' : (context) => const EvaluationScreen(),
       },
 
       //rutas de pantallas dinamicas
@@ -52,17 +71,25 @@ class MyApp extends StatelessWidget
       theme: ThemeData
       (
 
-        colorScheme: ColorScheme.fromSeed
+        colorScheme: ColorScheme.dark
         (
-          seedColor: const Color.fromARGB(255, 32, 87, 255),
-          primary: const Color.fromARGB(255, 255, 54, 54),
-          secondary: const Color.fromARGB(255, 53, 63, 252),
-          tertiary: const Color.fromARGB(255, 169, 216, 255),
+          primary: const Color(0xFFE11D48),       //rojo
+          secondary: const Color(0xFFFF6D00),     //naranja
+          tertiary: const Color(0xFF3F3F46),      //gris
+          surface: const Color(0xFF1C1C1F),       //superficies elevadas
+          onPrimary: const Color(0xFFF8FAFC),     //texto sobre primary
+          onSecondary: const Color(0xFFF8FAFC),   //texto sobre secondary
+          onSurface: const Color(0xFFF8FAFC),     //texto general
+          outline: const Color(0xFF3F3F46),       //bordes de contenedores
         ),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255), //fondo por defecto
+        scaffoldBackgroundColor: const Color(0xFF101012), //fondo por defecto
         textTheme: const TextTheme
         (
-          bodyMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+          bodyMedium: TextStyle
+          (
+            fontSize: 16.0, 
+            fontWeight: FontWeight.w500,
+          ),
         ),
         useMaterial3: true,
       ),
