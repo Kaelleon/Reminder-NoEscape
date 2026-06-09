@@ -167,6 +167,18 @@ class HomeScreen extends StatelessWidget
                     Navigator.pushNamed(context, '/about');
                   },
                 ),
+
+                //poc (prueba)
+                ListTile
+                (
+                  leading: Icon(Icons.science_outlined, color: colors.primary),
+                  title: const Text('PoC Test'),
+                  onTap: ()
+                  {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/poc');
+                  }
+                ),
               ],
             ),
           ),

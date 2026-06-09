@@ -4,6 +4,7 @@ import 'package:reminder_noescape/core/services/storage_service.dart';
 import 'package:reminder_noescape/models/preferences_view_model.dart';
 import 'package:reminder_noescape/ui/screens/evaluation_screen.dart';
 import 'package:reminder_noescape/ui/screens/home_screen.dart';
+import 'package:reminder_noescape/ui/screens/poc_test_screen.dart';
 import 'package:reminder_noescape/ui/screens/settings_screen.dart';
 import 'package:reminder_noescape/ui/screens/about_screen.dart';
 import 'package:reminder_noescape/models/task_model.dart';
@@ -11,12 +12,16 @@ import 'package:reminder_noescape/ui/screens/task_detail_screen.dart';
 import 'package:reminder_noescape/ui/screens/profile_screen.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:reminder_noescape/models/evaluation_view_model.dart';
+import 'package:reminder_noescape/core/services/background_service.dart';
+import 'package:reminder_noescape/core/services/notification_service.dart';
 
 void main() async 
 {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await StorageService.init();
+  await NotificationService.init();
+  await BackgroundService.init();
   
   runApp
   (
@@ -51,6 +56,7 @@ class MyApp extends StatelessWidget
         '/about': (context) => const AboutScreen(),
         '/profile' : (context) => const ProfileScreen(),
         '/evaluation' : (context) => const EvaluationScreen(),
+        '/poc' : (context) => const PocTestScreen(),
       },
 
       //rutas de pantallas dinamicas

@@ -22,4 +22,4 @@ class SectionCard extends StatelessWidget
       child: child,
     );
   }
-}
+} 
