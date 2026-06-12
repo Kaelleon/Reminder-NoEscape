@@ -45,6 +45,10 @@ dependencies:
   android_intent_plus: ^6.0.0
   timezone: ^0.11.0
   flutter_timezone: ^5.1.0
+  audioplayers: ^6.7.1
+  file_picker: ^8.1.2
+  share_plus: ^10.0.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +83,10 @@ flutter:
   - assets/images/profile.png
   - assets/icons/reminder_no_escape.png
   - assets/data/questions.json
+  - assets/audio/bell.mp3
+  - assets/audio/alarm.mp3
+  - assets/audio/buzzer.mp3
+  - assets/audio/chime.mp3
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

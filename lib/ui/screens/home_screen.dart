@@ -1,66 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:provider/provider.dart';
+import 'package:reminder_noescape/core/services/permission_service.dart';
+import 'package:reminder_noescape/models/task_view_model.dart';
 import 'history_screen.dart';
 import 'pending_tasks_screen.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:reminder_noescape/core/services/share_service.dart';
 
-class HomeScreen extends StatelessWidget
-{
-  const HomeScreen ({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context)
-  {
-    WidgetsBinding.instance.addPostFrameCallback((_)
-    {
-      FlutterNativeSplash.remove();
-    });
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      FlutterNativeSplash.remove();
+      await PermissionService.requestAll();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    
-    return DefaultTabController
-    (
+
+    return DefaultTabController(
       length: 2,
-      child: Scaffold
-      (
+      child: Scaffold(
         backgroundColor: colors.tertiary,
-        appBar: AppBar
-        (
+        appBar: AppBar(
           title: const Text('Reminder: No Escape'),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           foregroundColor: colors.onSurface,
-
-          //navegacion entre pendientes e historial
-          bottom: TabBar
-          (
+            actions: [
+              Consumer<TaskViewModel>(
+                builder: (context, taskVM, _) => IconButton(
+                  icon: const Icon(Icons.share_rounded),
+                  tooltip: 'Compartir tareas pendientes',
+                  onPressed: () => ShareService.sharePendingTasks(taskVM.pending),
+                ),
+              ),
+            ],
+          bottom: TabBar(
             labelColor: colors.secondary,
             unselectedLabelColor: colors.tertiary,
             indicatorColor: colors.secondary,
-
-            tabs: 
-            [
-              Tab
-              (
-                child: Row
-                (
+            tabs: const [
+              Tab(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: 
-                  [
-                    Icon(Icons.task), 
-                    SizedBox(width: 8), 
+                  children: [
+                    Icon(Icons.task),
+                    SizedBox(width: 8),
                     Text("Pendientes"),
                   ],
                 ),
               ),
-              
-              Tab
-              (
-                child: Row
-                (
+              Tab(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: 
-                  [
-                    Icon(Icons.history), 
-                    SizedBox(width: 8), 
+                  children: [
+                    Icon(Icons.history),
+                    SizedBox(width: 8),
                     Text("Historial"),
                   ],
                 ),
@@ -69,59 +75,38 @@ class HomeScreen extends StatelessWidget
           ),
         ),
 
-        //drawer de navegacion
-        drawer: Drawer
-        (
-          child: SafeArea
-          (
-            child: Column
-            (
+        drawer: Drawer(
+          child: SafeArea(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: 
-              [
-                //encabezado del drawer
-                DrawerHeader
-                (
-                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
-                  child: Row
-                  (
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(color: colors.surface),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: 
-                    [
-                      CircleAvatar
-                      (
+                    children: [
+                      const CircleAvatar(
                         radius: 32,
-                        backgroundImage: AssetImage('assets/images/profile.png')
+                        backgroundImage: AssetImage('assets/images/profile.png'),
                       ),
                       const SizedBox(width: 14),
-                      const Expanded
-                      (
-                        child: Column
-                        (
+                      const Expanded(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: 
-                          [
-                            Text
-                            (
+                          children: [
+                            Text(
                               'Capi',
-                              style: TextStyle
-                              (
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             SizedBox(height: 4),
-
-                            Text
-                            (
+                            Text(
                               'capi@example.com',
-                              style: TextStyle
-                              (
-                                color: Colors.white70,
-                                fontSize: 16,
-                              ),
+                              style: TextStyle(color: Colors.white70, fontSize: 16),
                             ),
                           ],
                         ),
@@ -130,64 +115,38 @@ class HomeScreen extends StatelessWidget
                   ),
                 ),
 
-                //perfil
-                ListTile
-                (
+                ListTile(
                   leading: Icon(Icons.person_outline, color: colors.primary),
                   title: const Text('Perfil'),
-                  onTap: ()
-                  {
+                  onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/profile');
                   },
                 ),
-
                 const Divider(),
-
-                //configuracion
-                ListTile
-                (
+                ListTile(
                   leading: Icon(Icons.settings_outlined, color: colors.tertiary),
                   title: const Text('Configuración'),
-                  onTap: ()
-                  {
+                  onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/settings');
                   },
                 ),
-
-                //about
-                ListTile
-                (
+                ListTile(
                   leading: Icon(Icons.info_outline, color: colors.secondary),
                   title: const Text('Acerca de'),
-                  onTap: ()
-                  {
+                  onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/about');
                   },
-                ),
-
-                //poc (prueba)
-                ListTile
-                (
-                  leading: Icon(Icons.science_outlined, color: colors.primary),
-                  title: const Text('PoC Test'),
-                  onTap: ()
-                  {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/poc');
-                  }
                 ),
               ],
             ),
           ),
         ),
 
-        body: const TabBarView
-        (
-          children: 
-          [
+        body: const TabBarView(
+          children: [
             PendingTasksScreen(),
             HistoryScreen(),
           ],

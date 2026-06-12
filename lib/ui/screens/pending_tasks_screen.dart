@@ -1,48 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_noescape/models/task_model.dart';
+import 'package:provider/provider.dart';
+import 'package:reminder_noescape/core/services/notification_service.dart';
+import 'package:reminder_noescape/models/task_view_model.dart';
 import 'package:reminder_noescape/ui/widgets/add_task_sheet.dart';
 import 'package:reminder_noescape/ui/widgets/empty_state.dart';
 import 'package:reminder_noescape/ui/widgets/task_card.dart';
 
-class PendingTasksScreen extends StatefulWidget
-{
+class PendingTasksScreen extends StatelessWidget {
   const PendingTasksScreen({super.key});
 
-  @override
-  State<PendingTasksScreen> createState() => _PendingTaskScreenState();
-}
-
-class _PendingTaskScreenState extends State<PendingTasksScreen> 
-  with AutomaticKeepAliveClientMixin //para mantener vivos los widget
-{
-  final List<Task> _tasks = [];
-
-  @override
-  bool get wantKeepAlive => _tasks.isNotEmpty;
-
-  void _openAddTaskSheet()
-  {
-    showModalBottomSheet
-    (
-      context: context, 
+  void _openAddTaskSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder
-      (
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      
-      builder: (_) => DraggableScrollableSheet
-      (
+      builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.85,
         minChildSize: 0.5,
         maxChildSize: 0.95,
         expand: false,
-        builder: (_, scrollController) => SingleChildScrollView
-        (
+        builder: (_, scrollController) => SingleChildScrollView(
           controller: scrollController,
-          child: AddTaskSheet
-          (
-            onTaskAdded: (task) => setState(() => _tasks.add(task)),
+          child: AddTaskSheet(
+            onTaskAdded: (task) async {
+              context.read<TaskViewModel>().addTask(task);
+              await NotificationService.scheduleTaskNotification(task);
+            },
           ),
         ),
       ),
@@ -50,44 +35,36 @@ class _PendingTaskScreenState extends State<PendingTasksScreen>
   }
 
   @override
-  Widget build(BuildContext context)
-  {
-    super.build(context);
-
+  Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final tasks = context.watch<TaskViewModel>().pending;
 
-    return Scaffold
-    (
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      body: _tasks.isEmpty 
-      ? const EmptyState
-        (
-          imagePath: "assets/images/empty.png", 
-          title: "Organiza ahora, cumple a tiempo", 
-          subtitle: "Añade tus tareas y recibe recordatorios constantes para asegurarte de completarlas antes del límite."
-        ) 
-        
-      : ListView.builder
-      (
-        padding: const EdgeInsets.only
-        (
-          top: 16,
-          left: 16,
-          right: 16,
-          bottom: 90,
-        ),
-
-        itemCount: _tasks.length,
-        itemBuilder: (context, index) => TaskCard
-        (
-          task: _tasks[index],
-          onTap: () => Navigator.pushNamed(context, '/taskDetail', arguments: _tasks[index],),
-        ),
-      ),
-
-      floatingActionButton: FloatingActionButton
-      (
-        onPressed: _openAddTaskSheet,
+      body: tasks.isEmpty
+          ? const EmptyState(
+              imagePath: "assets/images/empty.png",
+              title: "Organiza ahora, cumple a tiempo",
+              subtitle:
+                  "Añade tus tareas y recibe recordatorios constantes para asegurarte de completarlas antes del límite.",
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.only(
+                  top: 16, left: 16, right: 16, bottom: 90),
+              itemCount: tasks.length,
+              itemBuilder: (context, index) => TaskCard(
+                task: tasks[index],
+                onTap: () => Navigator.pushNamed(context, '/taskDetail',
+                    arguments: tasks[index]),
+                onComplete: () async {
+                  final task = tasks[index];
+                  await NotificationService.cancelTaskNotification(task);
+                  context.read<TaskViewModel>().completeTask(task);
+                },
+              ),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _openAddTaskSheet(context),
         tooltip: "Agregar recordatorio",
         backgroundColor: colors.primary,
         foregroundColor: colors.onPrimary,
