@@ -126,7 +126,7 @@ class _AlertScreenState extends State<AlertScreen>
 
     return PopScope(
       canPop: _canExit,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           HapticFeedback.mediumImpact();
           _showLockedSnackBar();

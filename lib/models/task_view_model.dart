@@ -126,11 +126,7 @@ class TaskViewModel extends ChangeNotifier {
   /// Llamar al reanudar la app (ej. desde main.dart con WidgetsBindingObserver)
   void checkOverdueTasks() {
     _checkOverdueTasks();
-    if (_pending.any((t) => t.dueDate.isBefore(DateTime.now()))) {
-      notifyListeners();
-    } else {
-      notifyListeners(); // por si cambió el historial
-    }
+    notifyListeners();
   }
 
   // ── Buscar tarea por título (compatibilidad con NotificationService) ─────

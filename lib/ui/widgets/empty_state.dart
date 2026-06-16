@@ -33,11 +33,11 @@ class EmptyState extends StatelessWidget
             (
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle
+              style: TextStyle
               (
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 15),
@@ -45,10 +45,10 @@ class EmptyState extends StatelessWidget
             (
               subtitle,
               textAlign: TextAlign.center,
-              style: const TextStyle
+              style: TextStyle
               (
                 fontSize: 16,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
           ],

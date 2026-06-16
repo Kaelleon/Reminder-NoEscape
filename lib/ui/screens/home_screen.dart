@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_noescape/core/services/permission_service.dart';
+import 'package:reminder_noescape/core/services/storage_service.dart';
 import 'package:reminder_noescape/models/task_view_model.dart';
 import 'history_screen.dart';
 import 'pending_tasks_screen.dart';
@@ -82,36 +84,50 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(color: colors.surface),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CircleAvatar(
-                        radius: 32,
-                        backgroundImage: AssetImage('assets/images/profile.png'),
-                      ),
-                      const SizedBox(width: 14),
-                      const Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Capi',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  child: Builder(
+                    builder: (context) {
+                      final savedName = StorageService.loadProfileName();
+                      final savedImagePath = StorageService.loadProfileImagePath();
+                      final displayName = savedName.isNotEmpty ? savedName : 'Usuario';
+                      final hasImage = savedImagePath.isNotEmpty;
+
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 32,
+                            backgroundColor: colors.surface,
+                            backgroundImage: hasImage
+                                ? FileImage(File(savedImagePath))
+                                : null,
+                            child: !hasImage
+                            ? Icon(
+                                Icons.person,
+                                size: 56,
+                                color: colors.onPrimaryContainer,
+                              )
+                            : null,
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  displayName,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 4),
-                            Text(
-                              'capi@example.com',
-                              style: TextStyle(color: Colors.white70, fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
 

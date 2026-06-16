@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_noescape/core/services/notification_service.dart';
-import 'package:reminder_noescape/ui/widgets/app_row.dart';
 import 'package:reminder_noescape/ui/widgets/section_card.dart';
 import 'package:reminder_noescape/ui/widgets/section_title.dart';
 import 'package:reminder_noescape/models/preferences_view_model.dart';
@@ -22,8 +21,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     'alarm': 'Alarma',
     'chime': 'Carillón',
     'buzzer': 'Zumbido',
-    'custom': 'Personalizado',
-    'silent': 'Silencio total',
   };
 
   static const _alertDurations = {

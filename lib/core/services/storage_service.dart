@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService 
 {
@@ -28,7 +27,7 @@ class StorageService
   static Future<void> saveCustomSoundPath(String value) async => await _prefs.setString('custom_sound_path', value);
 
   //DURACION DE ALERTA//
-  static int loadAlertDuration() => _prefs.getInt('alert_duration') ?? 30;
+  static int loadAlertDuration() => _prefs.getInt('alert_duration') ?? 5;
   static Future<void> saveAlertDuration(int value) async => await _prefs.setInt('alert_duration', value);
 
   static bool loadOverlayGranted() => _prefs.getBool('overlay_granted') ?? false;
@@ -54,4 +53,14 @@ class StorageService
     final raw = tasks.map((t) => jsonEncode(t)).toList();
     await _prefs.setStringList('history_tasks_data', raw);
   }
+
+  //PERFIL//
+  static String loadProfileName() => _prefs.getString('profile_name') ?? '';
+  static Future<void> saveProfileName(String value) async => await _prefs.setString('profile_name', value);
+
+  static String loadProfileImagePath() => _prefs.getString('profile_image_path') ?? '';
+  static Future<void> saveProfileImagePath(String value) async => await _prefs.setString('profile_image_path', value);
+
+  static String loadMemberSince() => _prefs.getString('member_since') ?? '';
+  static Future<void> saveMemberSince(String value) async => await _prefs.setString('member_since', value);
 }

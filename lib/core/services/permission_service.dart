@@ -82,7 +82,14 @@ class PermissionService {
   }
 
   static Future<void> openAppSettings() async {
-    await openAppSettings();
+    try {
+      const intent = AndroidIntent(
+        action: 'android.settings.APPLICATION_DETAILS_SETTINGS',
+        data: 'package:cl.Capi.ReminderNoEscape',
+        flags: [Flag.FLAG_ACTIVITY_NEW_TASK],
+      );
+      await intent.launch();
+    } catch (_) {}
   }
 
   static Future<Map<String, bool>> checkAll() async {
