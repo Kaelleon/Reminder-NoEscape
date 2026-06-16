@@ -249,6 +249,7 @@ static Future<void> scheduleRepeatNotification(Task task) async {
         'taskId': task.id,
         'intervalSeconds': task.reminderInterval.inSeconds,
         'dueDateMillis': task.dueDate.millisecondsSinceEpoch,
+        'anticipationTimeMillis': task.anticipationTime.millisecondsSinceEpoch,
         'title': task.title,
       });
     } catch (_) {

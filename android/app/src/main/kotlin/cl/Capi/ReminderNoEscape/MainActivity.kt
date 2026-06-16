@@ -58,9 +58,10 @@ class MainActivity : FlutterActivity() {
                         val taskId = call.argument<String>("taskId") ?: return@setMethodCallHandler result.error("INVALID", "taskId required", null)
                         val intervalSeconds = call.argument<Int>("intervalSeconds") ?: 60
                         val dueDateMillis = call.argument<Long>("dueDateMillis") ?: 0L
+                        val anticipationTimeMillis = call.argument<Long>("anticipationTimeMillis") ?: 0L
                         val title = call.argument<String>("title") ?: "Recordatorio"
 
-                        scheduleNativeAlarm(taskId, intervalSeconds, dueDateMillis, title)
+                        scheduleNativeAlarm(taskId, intervalSeconds, dueDateMillis, anticipationTimeMillis, title)
                         result.success(null)
                     }
                     "cancelAlarm" -> {
@@ -73,7 +74,7 @@ class MainActivity : FlutterActivity() {
             }
     }
 
-    private fun scheduleNativeAlarm(taskId: String, intervalSeconds: Int, dueDateMillis: Long, title: String) {
+    private fun scheduleNativeAlarm(taskId: String, intervalSeconds: Int, dueDateMillis: Long, anticipationTimeMillis: Long, title: String) {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(this, AlarmReceiver::class.java).apply {
@@ -91,7 +92,9 @@ class MainActivity : FlutterActivity() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val triggerAtMillis = System.currentTimeMillis() + (intervalSeconds * 1000L)
+        // Primera alarma en anticipationTime + interval (no en now + interval)
+        // Esto asegura que "Realizando tarea" (30 min de pausa) funcione correctamente
+        val triggerAtMillis = anticipationTimeMillis + (intervalSeconds * 1000L)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
