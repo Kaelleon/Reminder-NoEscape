@@ -62,8 +62,11 @@ class NotificationService {
     final task = taskVM.findById(payload);
     if (task == null) return;
 
-    // ✅ Cancela la repetición porque el usuario SÍ respondió
+    // Cancela la repetición actual
     cancelRepeatNotification(task);
+
+    // Programa la siguiente repetición para mantener la cadena
+    scheduleNextRepeat(task);
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(
@@ -187,7 +190,28 @@ static Future<void> scheduleRepeatNotification(Task task) async {
   );
 }
 
-  /// Cancela la notificación de repetición a 10s (llamar al abrir AlertScreen).
+  /// Programa la siguiente repetición en now + interval.
+  /// Mantiene la cadena de recordatorios activa.
+  static Future<void> scheduleNextRepeat(Task task) async {
+    await _createNotificationChannel();
+
+    final nextTime = tz.TZDateTime.now(tz.local).add(task.reminderInterval);
+
+    // Verificar que el siguiente tiempo no sea después de la fecha límite
+    if (nextTime.isAfter(task.dueDate)) return;
+
+    await _plugin.zonedSchedule(
+      id: task.id.hashCode + _repeatIdOffset,
+      title: '🔁 ${task.title}',
+      body: 'Sigue pendiente',
+      scheduledDate: nextTime,
+      notificationDetails: NotificationDetails(android: _androidDetails()),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: task.id,
+    );
+  }
+
+  /// Cancela la notificación de repetición (llamar al abrir AlertScreen).
   static Future<void> cancelRepeatNotification(Task task) async {
     await _plugin.cancel(id: task.id.hashCode + _repeatIdOffset);
   }

@@ -23,6 +23,7 @@ class _AlertScreenState extends State<AlertScreen>
   late int _secondsLeft;
   bool _canExit = false;
   Timer? _countdownTimer;
+  bool _actionTaken = false;
 
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -67,6 +68,7 @@ class _AlertScreenState extends State<AlertScreen>
   // ── Botón 1: Completar ───────────────────────────────────────────────────
   void _onComplete() {
     if (!_canExit) return;
+    _actionTaken = true;
     NotificationService.cancelTaskNotification(widget.task);
     context.read<TaskViewModel>().completeTask(widget.task);
     Navigator.of(context).popUntil((r) => r.isFirst);
@@ -75,6 +77,7 @@ class _AlertScreenState extends State<AlertScreen>
   // ── Botón 2: Realizando tarea (pausa 30 min) ─────────────────────────────
   void _onDoingTask() {
     if (!_canExit) return;
+    _actionTaken = true;
     NotificationService.cancelTaskNotification(widget.task);
     final pausedTask = Task(
       id: widget.task.id,
@@ -92,6 +95,7 @@ class _AlertScreenState extends State<AlertScreen>
   // ── Botón 3: Posponer (usa intervalo del usuario) ─────────────────────────
   void _onPostpone() {
     if (!_canExit) return;
+    _actionTaken = true;
     NotificationService.cancelTaskNotification(widget.task);
     final postponedTask = Task(
       id: widget.task.id,
@@ -130,6 +134,9 @@ class _AlertScreenState extends State<AlertScreen>
         if (!didPop) {
           HapticFeedback.mediumImpact();
           _showLockedSnackBar();
+        } else if (didPop && !_actionTaken) {
+          // El usuario salió sin tomar acción → reprogramar siguiente repetición
+          NotificationService.scheduleNextRepeat(widget.task);
         }
       },
       child: Scaffold(
