@@ -21,6 +21,10 @@ class NotificationService {
   // con el id principal de la tarea.
   static const int _repeatIdOffset = 1000000;
 
+  // MethodChannel para comunicar con AlarmReceiver (cadena nativa)
+  static const MethodChannel _alarmChannel =
+      MethodChannel('reminder_noescape/alarm');
+
   static Future<void> init() async {
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.local);
@@ -159,7 +163,7 @@ static Future<void> scheduleTaskNotification(Task task) async {
     payload: task.id,
   );
 
-  // Una sola repetición tras el intervalo del usuario
+  // Una sola repetición tras el intervalo del usuario (flutter_local_notifications)
   await _plugin.zonedSchedule(
     id: task.id.hashCode + _repeatIdOffset,
     title: '🔁 ${task.title}',
@@ -169,6 +173,9 @@ static Future<void> scheduleTaskNotification(Task task) async {
     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     payload: task.id,
   );
+
+  // Iniciar cadena nativa de alarmas (funciona aunque el usuario ignore la notificación)
+  await _scheduleNativeAlarm(task);
 }
 
 // Nuevo método: programa la SIGUIENTE repetición tras el intervalo
@@ -214,12 +221,14 @@ static Future<void> scheduleRepeatNotification(Task task) async {
   /// Cancela la notificación de repetición (llamar al abrir AlertScreen).
   static Future<void> cancelRepeatNotification(Task task) async {
     await _plugin.cancel(id: task.id.hashCode + _repeatIdOffset);
+    await _cancelNativeAlarm(task);
   }
 
-static Future<void> cancelTaskNotification(Task task) async {
-  await _plugin.cancel(id: task.id.hashCode);
-  await _plugin.cancel(id: task.id.hashCode + _repeatIdOffset);
-}
+  static Future<void> cancelTaskNotification(Task task) async {
+    await _plugin.cancel(id: task.id.hashCode);
+    await _plugin.cancel(id: task.id.hashCode + _repeatIdOffset);
+    await _cancelNativeAlarm(task);
+  }
 
   static Future<void> cancelAllById(String id) async {
     await _plugin.cancel(id: id.hashCode);
@@ -228,6 +237,34 @@ static Future<void> cancelTaskNotification(Task task) async {
 
   static Future<void> cancelAll() async {
     await _plugin.cancelAll();
+  }
+
+  // ── Cadena nativa de alarmas (AlarmReceiver) ─────────────────────────────
+
+  /// Programa la primera alarma nativa para iniciar la cadena infinita.
+  /// Se llama después de programar la repetición con flutter_local_notifications.
+  static Future<void> _scheduleNativeAlarm(Task task) async {
+    try {
+      await _alarmChannel.invokeMethod('scheduleAlarm', {
+        'taskId': task.id,
+        'intervalSeconds': task.reminderInterval.inSeconds,
+        'dueDateMillis': task.dueDate.millisecondsSinceEpoch,
+        'title': task.title,
+      });
+    } catch (_) {
+      // MethodChannel no disponible (iOS o versión sin implementar)
+    }
+  }
+
+  /// Cancela la alarma nativa de AlarmReceiver.
+  static Future<void> _cancelNativeAlarm(Task task) async {
+    try {
+      await _alarmChannel.invokeMethod('cancelAlarm', {
+        'taskId': task.id,
+      });
+    } catch (_) {
+      // MethodChannel no disponible
+    }
   }
 
   // ── Selección de sonido custom ─────────────────────────────────────────

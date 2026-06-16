@@ -1,7 +1,10 @@
 package cl.Capi.ReminderNoEscape
 
+import android.app.AlarmManager
 import android.app.KeyguardManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.os.Bundle
@@ -9,7 +12,6 @@ import android.view.WindowManager
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import android.content.Intent
 
 class MainActivity : FlutterActivity() {
 
@@ -47,6 +49,59 @@ class MainActivity : FlutterActivity() {
                     result.notImplemented()
                 }
             }
+
+        // MethodChannel para cadena nativa de alarmas (AlarmReceiver)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "reminder_noescape/alarm")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "scheduleAlarm" -> {
+                        val taskId = call.argument<String>("taskId") ?: return@setMethodCallHandler result.error("INVALID", "taskId required", null)
+                        val intervalSeconds = call.argument<Int>("intervalSeconds") ?: 60
+                        val dueDateMillis = call.argument<Long>("dueDateMillis") ?: 0L
+                        val title = call.argument<String>("title") ?: "Recordatorio"
+
+                        scheduleNativeAlarm(taskId, intervalSeconds, dueDateMillis, title)
+                        result.success(null)
+                    }
+                    "cancelAlarm" -> {
+                        val taskId = call.argument<String>("taskId") ?: return@setMethodCallHandler result.error("INVALID", "taskId required", null)
+                        AlarmReceiver.cancelAlarm(this, taskId)
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+    }
+
+    private fun scheduleNativeAlarm(taskId: String, intervalSeconds: Int, dueDateMillis: Long, title: String) {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(this, AlarmReceiver::class.java).apply {
+            putExtra(AlarmReceiver.EXTRA_TASK_ID, taskId)
+            putExtra(AlarmReceiver.EXTRA_INTERVAL_SECONDS, intervalSeconds)
+            putExtra(AlarmReceiver.EXTRA_DUE_DATE, dueDateMillis)
+            putExtra(AlarmReceiver.EXTRA_TITLE, title)
+        }
+
+        val requestCode = AlarmReceiver.ALARM_REQUEST_BASE + taskId.hashCode()
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val triggerAtMillis = System.currentTimeMillis() + (intervalSeconds * 1000L)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+            } else {
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+            }
+        } else {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+        }
     }
 
     private fun setTorch(on: Boolean) {
