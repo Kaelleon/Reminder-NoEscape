@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_noescape/core/services/notification_service.dart';
 import 'package:reminder_noescape/core/services/storage_service.dart';
+import 'package:reminder_noescape/l10n/app_localizations.dart';
 import 'package:reminder_noescape/models/task_model.dart';
 import 'package:reminder_noescape/models/task_view_model.dart';
 
@@ -18,7 +19,6 @@ class AlertScreen extends StatefulWidget {
 
 class _AlertScreenState extends State<AlertScreen>
     with SingleTickerProviderStateMixin {
- 
 
   late int _secondsLeft;
   bool _canExit = false;
@@ -43,7 +43,6 @@ class _AlertScreenState extends State<AlertScreen>
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    // Cancela la notificación de repetición a los 10s: el usuario ya entró.
     NotificationService.cancelRepeatNotification(widget.task);
 
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (t) {
@@ -65,7 +64,7 @@ class _AlertScreenState extends State<AlertScreen>
     _pulseController.dispose();
     super.dispose();
   }
-  // ── Botón 1: Completar ───────────────────────────────────────────────────
+
   void _onComplete() {
     if (!_canExit) return;
     _actionTaken = true;
@@ -74,7 +73,6 @@ class _AlertScreenState extends State<AlertScreen>
     Navigator.of(context).popUntil((r) => r.isFirst);
   }
 
-  // ── Botón 2: Realizando tarea (pausa 30 min) ─────────────────────────────
   void _onDoingTask() {
     if (!_canExit) return;
     _actionTaken = true;
@@ -92,7 +90,6 @@ class _AlertScreenState extends State<AlertScreen>
     Navigator.of(context).pop();
   }
 
-  // ── Botón 3: Posponer (usa intervalo del usuario) ─────────────────────────
   void _onPostpone() {
     if (!_canExit) return;
     _actionTaken = true;
@@ -112,9 +109,10 @@ class _AlertScreenState extends State<AlertScreen>
 
   void _showLockedSnackBar() {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Espera $_secondsLeft s para poder salir',
+        content: Text('${l10n.espera} $_secondsLeft ${l10n.paraSalir}',
             style: const TextStyle(fontWeight: FontWeight.w600)),
         backgroundColor: colors.error,
         duration: const Duration(seconds: 2),
@@ -126,6 +124,7 @@ class _AlertScreenState extends State<AlertScreen>
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final task = widget.task;
 
     return PopScope(
@@ -135,7 +134,6 @@ class _AlertScreenState extends State<AlertScreen>
           HapticFeedback.mediumImpact();
           _showLockedSnackBar();
         } else if (didPop && !_actionTaken) {
-          // El usuario salió sin tomar acción → reprogramar siguiente repetición
           NotificationService.scheduleNextRepeat(widget.task);
         }
       },
@@ -147,15 +145,15 @@ class _AlertScreenState extends State<AlertScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeader(colors),
+                _buildHeader(colors, l10n),
                 const SizedBox(height: 32),
                 _buildPulsingIcon(colors),
                 const SizedBox(height: 28),
-                _buildTaskCard(colors, task),
+                _buildTaskCard(colors, task, l10n),
                 const Spacer(),
-                _buildActionButtons(colors),
+                _buildActionButtons(colors, l10n),
                 const SizedBox(height: 12),
-                if (!_canExit) _buildLockHint(colors),
+                if (!_canExit) _buildLockHint(colors, l10n),
               ],
             ),
           ),
@@ -164,7 +162,7 @@ class _AlertScreenState extends State<AlertScreen>
     );
   }
 
-  Widget _buildHeader(ColorScheme colors) {
+  Widget _buildHeader(ColorScheme colors, AppLocalizations l10n) {
     final total = StorageService.loadAlertDuration();
     final progress = total > 0 ? _secondsLeft / total : 0.0;
     final isUrgent = _secondsLeft <= 5 && !_canExit;
@@ -202,7 +200,7 @@ class _AlertScreenState extends State<AlertScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _canExit ? '¡Tiempo cumplido!' : 'Recordatorio activo',
+                _canExit ? l10n.tiempoCumplido : l10n.recordatorioActivo,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -211,8 +209,8 @@ class _AlertScreenState extends State<AlertScreen>
               ),
               Text(
                 _canExit
-                    ? 'Ya puedes salir o tomar acción'
-                    : 'No puedes salir hasta que termine el contador',
+                    ? l10n.yaPuedesSalir
+                    : l10n.noPuedesSalir,
                 style: TextStyle(fontSize: 12, color: colors.onSurface.withOpacity(0.55)),
               ),
             ],
@@ -236,13 +234,13 @@ class _AlertScreenState extends State<AlertScreen>
     );
   }
 
-  Widget _buildTaskCard(ColorScheme colors, Task task) {
+  Widget _buildTaskCard(ColorScheme colors, Task task, AppLocalizations l10n) {
     String timeLeftLabel() {
       final diff = task.dueDate.difference(DateTime.now());
-      if (diff.isNegative) return 'Vencida';
-      if (diff.inMinutes < 60) return 'Vence en ${diff.inMinutes} min';
-      if (diff.inHours < 24) return 'Vence en ${diff.inHours} h';
-      return 'Vence en ${diff.inDays} días';
+      if (diff.isNegative) return l10n.vencida;
+      if (diff.inMinutes < 60) return '${l10n.venceEn} ${diff.inMinutes} ${l10n.min}';
+      if (diff.inHours < 24) return '${l10n.venceEn} ${diff.inHours} h';
+      return '${l10n.venceEn} ${diff.inDays} ${l10n.dias}';
     }
 
     return Container(
@@ -270,7 +268,7 @@ class _AlertScreenState extends State<AlertScreen>
           Row(children: [
             _metaChip(colors, icon: Icons.timer_outlined, label: timeLeftLabel(), color: colors.tertiary),
             const SizedBox(width: 10),
-            _metaChip(colors, icon: Icons.repeat_rounded, label: _formatInterval(task.reminderInterval), color: colors.secondary),
+            _metaChip(colors, icon: Icons.repeat_rounded, label: _formatInterval(task.reminderInterval, l10n), color: colors.secondary),
           ]),
         ],
       ),
@@ -289,7 +287,7 @@ class _AlertScreenState extends State<AlertScreen>
     );
   }
 
-  Widget _buildActionButtons(ColorScheme colors) {
+  Widget _buildActionButtons(ColorScheme colors, AppLocalizations l10n) {
     final enabled = _canExit;
 
     return Column(
@@ -298,7 +296,7 @@ class _AlertScreenState extends State<AlertScreen>
         FilledButton.icon(
           onPressed: enabled ? _onComplete : null,
           icon: const Icon(Icons.check_circle_outline_rounded),
-          label: const Text('Completar tarea', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+          label: Text(l10n.completarTarea, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
           style: FilledButton.styleFrom(
             backgroundColor: colors.primary,
             foregroundColor: Colors.white,
@@ -311,7 +309,7 @@ class _AlertScreenState extends State<AlertScreen>
         FilledButton.icon(
           onPressed: enabled ? _onDoingTask : null,
           icon: const Icon(Icons.play_circle_outline_rounded),
-          label: const Text('Estoy realizando la tarea', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+          label: Text(l10n.realizandoTarea, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
           style: FilledButton.styleFrom(
             backgroundColor: colors.secondary,
             foregroundColor: Colors.white,
@@ -324,7 +322,7 @@ class _AlertScreenState extends State<AlertScreen>
         OutlinedButton.icon(
           onPressed: enabled ? _onPostpone : null,
           icon: Icon(Icons.snooze_rounded, color: colors.onSurface.withOpacity(enabled ? 0.7 : 0.3)),
-          label: Text('Posponer',
+          label: Text(l10n.posponer,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: colors.onSurface.withOpacity(enabled ? 0.8 : 0.3))),
           style: OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(52),
@@ -336,7 +334,7 @@ class _AlertScreenState extends State<AlertScreen>
     );
   }
 
-  Widget _buildLockHint(ColorScheme colors) {
+  Widget _buildLockHint(ColorScheme colors, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -344,15 +342,15 @@ class _AlertScreenState extends State<AlertScreen>
         children: [
           Icon(Icons.lock_clock_outlined, size: 14, color: colors.onSurface.withOpacity(0.4)),
           const SizedBox(width: 5),
-          Text('Salida disponible en $_secondsLeft s', style: TextStyle(fontSize: 12, color: colors.onSurface.withOpacity(0.4))),
+          Text('${l10n.salidaDisponible} $_secondsLeft s', style: TextStyle(fontSize: 12, color: colors.onSurface.withOpacity(0.4))),
         ],
       ),
     );
   }
 
-  String _formatInterval(Duration d) {
-    if (d.inSeconds < 60) return 'Cada ${d.inSeconds}s';
-    if (d.inMinutes < 60) return 'Cada ${d.inMinutes} min';
-    return 'Cada ${d.inHours} h';
+  String _formatInterval(Duration d, AppLocalizations l10n) {
+    if (d.inSeconds < 60) return '${l10n.cada} ${d.inSeconds}s';
+    if (d.inMinutes < 60) return '${l10n.cada} ${d.inMinutes} ${l10n.min}';
+    return '${l10n.cada} ${d.inHours} h';
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_noescape/core/services/notification_service.dart';
+import 'package:reminder_noescape/l10n/app_localizations.dart';
 import 'package:reminder_noescape/models/task_view_model.dart';
 import 'package:reminder_noescape/ui/widgets/add_task_sheet.dart';
 import 'package:reminder_noescape/ui/widgets/empty_state.dart';
@@ -38,15 +39,15 @@ class PendingTasksScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final tasks = context.watch<TaskViewModel>().pending;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: tasks.isEmpty
-          ? const EmptyState(
+          ? EmptyState(
               imagePath: "assets/images/empty.png",
-              title: "Organiza ahora, cumple a tiempo",
-              subtitle:
-                  "Añade tus tareas y recibe recordatorios constantes para asegurarte de completarlas antes del límite.",
+              title: l10n.organizaAhora,
+              subtitle: l10n.organizaAhoraDesc,
             )
           : ListView.builder(
               padding: const EdgeInsets.only(
@@ -65,7 +66,7 @@ class PendingTasksScreen extends StatelessWidget {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _openAddTaskSheet(context),
-        tooltip: "Agregar recordatorio",
+        tooltip: l10n.locale.languageCode == 'en' ? 'Add reminder' : "Agregar recordatorio",
         backgroundColor: colors.primary,
         foregroundColor: colors.onPrimary,
         child: const Icon(Icons.add),

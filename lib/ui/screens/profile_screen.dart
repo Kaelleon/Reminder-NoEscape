@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_noescape/core/services/storage_service.dart';
+import 'package:reminder_noescape/l10n/app_localizations.dart';
 import 'package:reminder_noescape/models/task_view_model.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -26,7 +27,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _imagePath = StorageService.loadProfileImagePath();
     _memberSince = StorageService.loadMemberSince();
 
-    // Si no hay fecha de registro, guardar la actual
     if (_memberSince.isEmpty) {
       final now = DateTime.now();
       final months = [
@@ -47,6 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _pickImage() async {
+    final l10n = AppLocalizations.of(context)!;
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -68,19 +69,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Seleccionar imagen',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Text(
+                l10n.seleccionarImagen,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               ListTile(
                 leading: const Icon(Icons.photo_library_outlined),
-                title: const Text('Galería'),
+                title: Text(l10n.galeria),
                 onTap: () => Navigator.pop(context, ImageSource.gallery),
               ),
               ListTile(
                 leading: const Icon(Icons.camera_alt_outlined),
-                title: const Text('Cámara'),
+                title: Text(l10n.camara),
                 onTap: () => Navigator.pop(context, ImageSource.camera),
               ),
             ],
@@ -106,18 +107,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _editName() {
+    final l10n = AppLocalizations.of(context)!;
     _nameController.text = _userName;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text('Editar nombre'),
+        title: Text(l10n.editarNombre),
         content: TextField(
           controller: _nameController,
           autofocus: true,
           maxLength: 30,
           decoration: InputDecoration(
-            hintText: 'Escribe tu nombre',
+            hintText: l10n.escribeNombre,
             counterText: '',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -127,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
+            child: Text(l10n.cancelar),
           ),
           FilledButton(
             onPressed: () async {
@@ -140,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
               if (context.mounted) Navigator.pop(context);
             },
-            child: const Text('Guardar'),
+            child: Text(l10n.guardar),
           ),
         ],
       ),
@@ -151,21 +153,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final taskVM = context.watch<TaskViewModel>();
+    final l10n = AppLocalizations.of(context)!;
 
-    // Estadísticas reales
     final completedCount = taskVM.history.where((t) => t.isCompleted).length;
     final pendingCount = taskVM.pending.length;
     final overdueCount = taskVM.history.where((t) => !t.isCompleted).length;
     final totalCount = pendingCount + taskVM.history.length;
 
-    final displayName = _userName.isNotEmpty ? _userName : 'Tu nombre';
+    final displayName = _userName.isNotEmpty ? _userName : l10n.tuNombre;
     final hasImage = _imagePath.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Perfil',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          l10n.perfil,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: colors.primary,
@@ -179,7 +181,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             const SizedBox(height: 24),
 
-            // Foto del perfil con opción de cambiar
             GestureDetector(
               onTap: _pickImage,
               child: Stack(
@@ -220,7 +221,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Nombre del usuario con opción de editar
             GestureDetector(
               onTap: _editName,
               child: Row(
@@ -247,18 +247,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 32),
 
-            // Estadísticas
-            SectionTitleWidget(label: 'Estadísticas', color: colors.primary),
+            SectionTitleWidget(label: l10n.estadisticas, color: colors.primary),
             const SizedBox(height: 16),
 
-            // Tarjetas de estadísticas
             Row(
               children: [
                 Expanded(
                   child: _StatCard(
                     icon: Icons.check_circle_rounded,
                     iconColor: colors.secondary,
-                    label: 'Completadas',
+                    label: l10n.completadas,
                     value: '$completedCount',
                   ),
                 ),
@@ -267,7 +265,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: _StatCard(
                     icon: Icons.pending_actions_rounded,
                     iconColor: colors.primary,
-                    label: 'Pendientes',
+                    label: l10n.pendientes,
                     value: '$pendingCount',
                   ),
                 ),
@@ -280,7 +278,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: _StatCard(
                     icon: Icons.timer_off_rounded,
                     iconColor: colors.tertiary,
-                    label: 'Vencidas',
+                    label: l10n.vencidas,
                     value: '$overdueCount',
                   ),
                 ),
@@ -289,7 +287,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: _StatCard(
                     icon: Icons.bar_chart_rounded,
                     iconColor: colors.secondary,
-                    label: 'Total',
+                    label: l10n.totalEstadisticas,
                     value: '$totalCount',
                   ),
                 ),
@@ -297,8 +295,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 32),
 
-            // Información de la cuenta
-            SectionTitleWidget(label: 'Cuenta', color: colors.primary),
+            SectionTitleWidget(label: l10n.cuenta, color: colors.primary),
             const SizedBox(height: 12),
 
             Container(
@@ -313,14 +310,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _InfoRow(
                     icon: Icons.person_outline,
                     iconColor: colors.primary,
-                    label: 'Nombre',
-                    value: _userName.isNotEmpty ? _userName : 'No definido',
+                    label: l10n.nombre,
+                    value: _userName.isNotEmpty ? _userName : l10n.noDefinido,
                   ),
                   Divider(height: 1, color: colors.outline),
                   _InfoRow(
                     icon: Icons.calendar_today_outlined,
                     iconColor: colors.tertiary,
-                    label: 'Miembro desde',
+                    label: l10n.miembroDesde,
                     value: _memberSince,
                   ),
                 ],
@@ -334,7 +331,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-// Widget auxiliar para el título de sección (estilo similar al SectionTitle del proyecto)
 class SectionTitleWidget extends StatelessWidget {
   final String label;
   final Color color;
@@ -366,7 +362,6 @@ class SectionTitleWidget extends StatelessWidget {
   }
 }
 
-// Estructura de las tarjetas de información
 class _StatCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -416,7 +411,6 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-// Estructura de las filas de información
 class _InfoRow extends StatelessWidget {
   final IconData icon;
   final Color iconColor;

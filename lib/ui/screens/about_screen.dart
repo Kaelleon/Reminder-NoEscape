@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reminder_noescape/l10n/app_localizations.dart';
 import 'package:reminder_noescape/ui/widgets/app_row.dart';
 import 'package:reminder_noescape/ui/widgets/section_title.dart';
 import 'package:reminder_noescape/ui/widgets/section_card.dart';
@@ -11,15 +12,16 @@ class AboutScreen extends StatelessWidget
   Widget build(BuildContext context) 
   {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold
     (
       appBar: AppBar
       (
-        title: const Text
+        title: Text
         (
-          'Acerca de',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          l10n.acercaDe,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
 
         centerTitle: true,
@@ -67,7 +69,7 @@ class AboutScreen extends StatelessWidget
             //version de la aplicacion
             Text
             (
-              'Versión 1.0.0',
+              '${l10n.version} 1.0.0',
               style: TextStyle
               (
                 fontSize: 13,
@@ -80,19 +82,17 @@ class AboutScreen extends StatelessWidget
             //descripcion
             SectionCard
             (
-              child: const Text
+              child: Text
               (
-                'Reminder: No Escape es un recordatorio que no acepta ser ignorado. '
-                'Las alertas aparecen en pantalla completa de forma insistente hasta '
-                'que completes la tarea o se agote el tiempo límite.',
-                style: TextStyle(fontSize: 15, height: 1.6),
+                l10n.descripcionApp,
+                style: const TextStyle(fontSize: 15, height: 1.6),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 20),
 
             //funcionamiento
-            SectionTitle(label: 'Cómo funciona', color: colors.primary),
+            SectionTitle(label: l10n.comoFunciona, color: colors.primary),
             const SizedBox(height: 12),
 
             //alertas de pantalla
@@ -101,8 +101,8 @@ class AboutScreen extends StatelessWidget
               icon: Icons.fullscreen_rounded,
               iconColor: colors.primary,
               iconContainer: true,
-              label: 'Alertas en pantalla completa',
-              subtitle: 'Cada recordatorio toma control total de la pantalla por el tiempo que definas.',
+              label: l10n.alertasPantalla,
+              subtitle: l10n.alertasPantallaDesc,
             ),
 
             //repeticion constante
@@ -111,8 +111,8 @@ class AboutScreen extends StatelessWidget
               icon: Icons.repeat_rounded,
               iconColor: colors.primary,
               iconContainer: true,
-              label: 'Repetición insistente',
-              subtitle: 'Si cierras la alerta, vuelve según el intervalo que hayas configurado (30s, 1min, 5min…).',
+              label: l10n.repeticion,
+              subtitle: l10n.repeticionDesc,
             ),
 
             //modo pausa
@@ -121,8 +121,8 @@ class AboutScreen extends StatelessWidget
               icon: Icons.pause_circle_rounded,
               iconColor: colors.secondary,
               iconContainer: true,
-              label: 'Modo "Realizando tarea"',
-              subtitle: 'Activa una pausa temporal para que no te interrumpa mientras trabajas en ello.',
+              label: l10n.modoPausa,
+              subtitle: l10n.modoPausaDesc,
             ),
 
             //validacion de tareas
@@ -131,13 +131,13 @@ class AboutScreen extends StatelessWidget
               icon: Icons.check_circle_rounded,
               iconColor: Colors.green,
               iconContainer: true,
-              label: 'Una sola salida',
-              subtitle: 'Solo completando la tarea o al vencer el tiempo límite se detienen las alertas.',
+              label: l10n.unaSalida,
+              subtitle: l10n.unaSalidaDesc,
             ),
             const SizedBox(height: 20),
 
             //anticipacion
-            SectionTitle(label: 'Anticipación', color: colors.primary),
+            SectionTitle(label: l10n.anticipacion, color: colors.primary),
             const SizedBox(height: 12),
             SectionCard
             (
@@ -147,13 +147,12 @@ class AboutScreen extends StatelessWidget
                 [
                   Icon(Icons.access_time_rounded, color: colors.primary, size: 28),
                   const SizedBox(width: 14),
-                  const Expanded
+                  Expanded
                   (
                     child: Text
                     (
-                      'Configura con cuánta anticipación quieres que empiecen '
-                      'los recordatorios antes del tiempo límite de cada tarea.',
-                      style: TextStyle(fontSize: 14, height: 1.5),
+                      l10n.anticipacionDesc,
+                      style: const TextStyle(fontSize: 14, height: 1.5),
                     ),
                   ),
                 ],
@@ -174,7 +173,7 @@ class AboutScreen extends StatelessWidget
             
             Text
             (
-              'Hecho con ♥ para que no olvides nada',
+              l10n.hechoCon,
               style: TextStyle
               (
                 fontSize: 12,

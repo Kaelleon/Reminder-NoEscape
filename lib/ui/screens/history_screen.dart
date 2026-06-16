@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_noescape/l10n/app_localizations.dart';
 import 'package:reminder_noescape/models/task_view_model.dart';
 import 'package:reminder_noescape/ui/widgets/empty_state.dart';
 import 'package:reminder_noescape/ui/widgets/task_card.dart';
@@ -10,14 +11,15 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tasks = context.watch<TaskViewModel>().history;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: tasks.isEmpty
-          ? const EmptyState(
+          ? EmptyState(
               imagePath: "assets/images/empty_history.png",
-              title: "Sin historial aún",
-              subtitle: "Las tareas completadas o vencidas aparecerán aquí",
+              title: l10n.sinHistorial,
+              subtitle: l10n.sinHistorialDesc,
             )
           : ListView.builder(
               itemCount: tasks.length,

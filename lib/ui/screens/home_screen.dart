@@ -4,6 +4,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_noescape/core/services/permission_service.dart';
 import 'package:reminder_noescape/core/services/storage_service.dart';
+import 'package:reminder_noescape/l10n/app_localizations.dart';
 import 'package:reminder_noescape/models/task_view_model.dart';
 import 'history_screen.dart';
 import 'pending_tasks_screen.dart';
@@ -30,20 +31,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         backgroundColor: colors.tertiary,
         appBar: AppBar(
-          title: const Text('Reminder: No Escape'),
+          title: Text(l10n.tituloApp),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           foregroundColor: colors.onSurface,
             actions: [
               Consumer<TaskViewModel>(
                 builder: (context, taskVM, _) => IconButton(
                   icon: const Icon(Icons.share_rounded),
-                  tooltip: 'Compartir tareas pendientes',
+                  tooltip: l10n.compartir,
                   onPressed: () => ShareService.sharePendingTasks(taskVM.pending),
                 ),
               ),
@@ -52,14 +54,14 @@ class _HomeScreenState extends State<HomeScreen> {
             labelColor: colors.secondary,
             unselectedLabelColor: colors.tertiary,
             indicatorColor: colors.secondary,
-            tabs: const [
+            tabs: [
               Tab(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.task),
-                    SizedBox(width: 8),
-                    Text("Pendientes"),
+                    const Icon(Icons.task),
+                    const SizedBox(width: 8),
+                    Text(l10n.pendientes),
                   ],
                 ),
               ),
@@ -67,9 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.history),
-                    SizedBox(width: 8),
-                    Text("Historial"),
+                    const Icon(Icons.history),
+                    const SizedBox(width: 8),
+                    Text(l10n.historial),
                   ],
                 ),
               ),
@@ -88,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context) {
                       final savedName = StorageService.loadProfileName();
                       final savedImagePath = StorageService.loadProfileImagePath();
-                      final displayName = savedName.isNotEmpty ? savedName : 'Usuario';
+                      final displayName = savedName.isNotEmpty ? savedName : l10n.usuario;
                       final hasImage = savedImagePath.isNotEmpty;
 
                       return Row(
@@ -116,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Text(
                                   displayName,
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                  style: TextStyle(
+                                    color: colors.onSurface,
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -133,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 ListTile(
                   leading: Icon(Icons.person_outline, color: colors.primary),
-                  title: const Text('Perfil'),
+                  title: Text(l10n.perfil),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/profile');
@@ -142,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Divider(),
                 ListTile(
                   leading: Icon(Icons.settings_outlined, color: colors.tertiary),
-                  title: const Text('Configuración'),
+                  title: Text(l10n.configuracion),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/settings');
@@ -150,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 ListTile(
                   leading: Icon(Icons.info_outline, color: colors.secondary),
-                  title: const Text('Acerca de'),
+                  title: Text(l10n.acercaDe),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/about');

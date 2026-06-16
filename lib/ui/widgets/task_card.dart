@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reminder_noescape/l10n/app_localizations.dart';
 import 'package:reminder_noescape/models/task_model.dart';
 
 class TaskCard extends StatelessWidget {
@@ -47,14 +48,17 @@ class TaskCard extends StatelessWidget {
           "${task.dueDate.hour.toString().padLeft(2, '0')}:${task.dueDate.minute.toString().padLeft(2, '0')}",
           style: TextStyle(color: Colors.grey[600], fontSize: 13),
         ),
-        trailing: showStatus
-            ? Chip(
-                label: Text(
-                  task.isCompleted ? "Cumplida" : "No cumplida",
-                  style: TextStyle(color: color, fontSize: 12),
-                ),
-                backgroundColor: color.withOpacity(0.1),
-              )
+            trailing: showStatus
+            ? Builder(builder: (context) {
+                final l10n = AppLocalizations.of(context)!;
+                return Chip(
+                  label: Text(
+                    task.isCompleted ? l10n.cumplida : l10n.noCumplida,
+                    style: TextStyle(color: color, fontSize: 12),
+                  ),
+                  backgroundColor: color.withOpacity(0.1),
+                );
+              })
             : const Icon(Icons.chevron_right),
       ),
     );
