@@ -62,6 +62,19 @@ class _AddTaskSheetState extends State<AddTaskSheet>
     (
       context: context,
       initialTime: TimeOfDay.now(),
+      initialEntryMode: TimePickerEntryMode.dial,
+      builder: (context, child) {
+        return Localizations.override(
+          context: context,
+          locale: const Locale('en', 'US'),
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              alwaysUse24HourFormat: false,
+            ),
+            child: child!,
+          ),
+        );
+      },
     );
 
     if (time != null)
